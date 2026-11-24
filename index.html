@@ -1,0 +1,1204 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Heimkino">
+<meta name="theme-color" content="#0b0b0f">
+<link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Heimkino</title>
+<style>
+html{height:100%;overscroll-behavior-y:none;-webkit-text-size-adjust:100%}
+body{min-height:100vh;min-height:100dvh}
+html,body{touch-action:manipulation}
+button,a,input,select,.ev,.card{touch-action:manipulation}
+:root{
+  --bg:#0b0b0f; --bg2:#121218; --card:#17171f; --line:#262631; --text:#f3f3f6; --muted:#9a9aa8;
+  --accent:#ff8a1f; --accent2:#ffb15c; --ok:#4cd08a; --r:16px;
+  --safe-b:env(safe-area-inset-bottom,0px); --safe-t:env(safe-area-inset-top,0px);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.4 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif}
+body{padding-bottom:calc(76px + var(--safe-b))}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+img{display:block}
+.top{position:sticky;top:0;z-index:20;padding:calc(22px + var(--safe-t)) 16px 12px;background:rgba(11,11,15,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.top h1{margin:0;font-size:20px;letter-spacing:-.3px}
+.top h1 span{color:var(--accent)}
+.qin{width:100%;padding:12px 14px;border-radius:12px;background:var(--bg2);border:1px solid var(--line);color:var(--text);font-size:16px;outline:none}
+.qin:focus{border-color:var(--accent)}
+.hbtns{display:flex;align-items:center;gap:8px}
+.modebtn{flex:none;height:42px;padding:0 14px;border-radius:13px;background:var(--card);border:1px solid var(--line);color:var(--muted);font-size:13px;font-weight:600}
+.modebtn.lite{color:var(--accent);border-color:var(--accent)}
+.gear{flex:none;width:42px;height:42px;border-radius:13px;background:var(--card);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.gear svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.gear:active{color:var(--accent)}
+.tg{appearance:none;-webkit-appearance:none;flex:none;width:46px;height:28px;border-radius:14px;background:#2a2a36;position:relative;transition:.2s;margin:0}
+.tg::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s}
+.tg:checked{background:var(--accent)}
+.tg:checked::after{left:21px}
+.setrow{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 0;border-top:1px solid var(--line)}
+.setrow b{display:block;font-weight:600}
+.setrow .muted{display:block;font-size:12px;margin-top:2px}
+.setgroup{margin:20px 0 2px;font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--accent2)}
+.brand{min-width:0}
+.by{font-size:11px;letter-spacing:.6px;color:var(--muted);margin-top:1px;white-space:nowrap}
+.sw{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer;user-select:none}
+.sw input{appearance:none;-webkit-appearance:none;width:38px;height:22px;border-radius:12px;background:#2a2a36;position:relative;transition:.2s;margin:0}
+.sw input::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.2s}
+.sw input:checked{background:var(--accent)}
+.sw input:checked::after{left:18px}
+main{max-width:1240px;margin:0 auto;padding:16px 16px 8px}
+h2{font-size:18px;margin:26px 0 10px;letter-spacing:-.2px;display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+h2:first-child{margin-top:4px}
+h2 small{font-size:12px;font-weight:500;color:var(--muted)}
+h2.fold{cursor:pointer;user-select:none;-webkit-user-select:none;align-items:center}
+h2.fold::after{content:'';flex:none;width:9px;height:9px;margin-left:auto;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg) translate(-2px,-2px);transition:transform .2s}
+h2.fold.shut::after{transform:rotate(-45deg)}
+h2.fold.shut + *{display:none}
+h3.fold{cursor:pointer;user-select:none;-webkit-user-select:none;display:flex;align-items:center;gap:10px}
+h3.fold::after{content:'';flex:none;width:9px;height:9px;margin-left:auto;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg) translate(-2px,-2px);transition:transform .2s}
+.panel.shut > :not(h3){display:none}
+.panel.shut > h3{margin-bottom:0}
+.panel.shut > h3.fold::after{transform:rotate(-45deg)}
+.muted{color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding:2px 0 10px}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;padding:7px 13px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-size:14px;color:var(--muted);white-space:nowrap}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#1a0f00;font-weight:600}
+.row{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x proximity;padding:2px 0 10px;scrollbar-width:none;margin:0 -16px;padding-left:16px;padding-right:16px}
+.row{scroll-padding-left:16px}
+.row::-webkit-scrollbar{display:none}
+.row .card{flex:none;width:136px;scroll-snap-align:start}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(136px,1fr));gap:14px}
+.card{min-width:0}
+.poster{position:relative;display:block;width:100%;aspect-ratio:2/3;border-radius:var(--r);overflow:hidden;background:var(--card);border:1px solid var(--line);padding:0}
+.poster img{width:100%;height:100%;object-fit:cover}
+.noimg{display:flex;align-items:center;justify-content:center;height:100%;padding:10px;text-align:center;color:var(--muted);font-size:13px}
+.badge{position:absolute;left:8px;top:8px;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-radius:999px;padding:3px 9px;font-size:12px;font-weight:700;color:var(--accent2)}
+.rank{position:absolute;left:8px;bottom:6px;font-size:34px;font-weight:800;line-height:1;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.8)}
+.seenmark{position:absolute;right:8px;top:8px;background:var(--ok);color:#06240f;border-radius:999px;padding:3px 9px;font-size:11px;font-weight:700}
+.ct{margin-top:8px;font-weight:600;font-size:14px;line-height:1.4;min-height:2.8em;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.cs{font-size:12px;line-height:1.4;min-height:1.4em;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.acts{display:flex;gap:6px;margin-top:8px}
+.acts button{flex:1;padding:7px 4px;border-radius:10px;background:var(--card);border:1px solid var(--line);font-size:12px;color:var(--muted)}
+.acts button.on[data-act=seen]{background:rgba(76,208,138,.16);border-color:var(--ok);color:var(--ok)}
+.acts button.on[data-act=watch]{background:rgba(255,138,31,.16);border-color:var(--accent);color:var(--accent2)}
+.panel{background:linear-gradient(135deg,#231607,#17171f 70%);border:1px solid #3a2610;border-radius:20px;padding:16px;margin-bottom:6px}
+.panel h3{margin:0 0 10px;font-size:15px;color:var(--accent2);text-transform:uppercase;letter-spacing:.8px}
+.ev{display:flex;gap:12px;align-items:center;padding:9px 0;border-top:1px solid rgba(255,255,255,.07)}
+.ev:first-of-type{border-top:0}
+.ev .t{flex:none;min-width:52px;font-weight:700;color:var(--accent2);font-variant-numeric:tabular-nums}
+.ev .m{min-width:0;flex:1}
+.ev .m b{display:block;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ev .m span{font-size:12px;color:var(--muted)}
+.ev img.ic{width:28px;height:28px;object-fit:contain;flex:none}
+ .ev[data-match]{cursor:pointer}
+.ev[data-match]:active{opacity:.7}
+.mh{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin:2px 0 6px;text-align:center}
+.mt{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0}
+.mt b{font-size:15px;line-height:1.25}
+.mt img,.mt .lgx{width:52px;height:52px;object-fit:contain;display:block}
+.mc{display:flex;flex-direction:column;align-items:center;gap:6px}
+.msc{font-size:34px;font-weight:800;letter-spacing:1px;font-variant-numeric:tabular-nums}
+.msc.small{font-size:20px;letter-spacing:0}
+.msec{margin:18px 0 4px;font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--accent2)}
+.msec small{text-transform:none;letter-spacing:0;font-weight:500;color:var(--muted)}
+.kv{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-top:1px solid var(--line);font-size:14px}
+.kv span{color:var(--muted);flex:none}
+.kv b{font-weight:600;text-align:right}
+.goal{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:14px}
+.goal .gm{flex:none;width:36px;color:var(--accent2);font-weight:700;font-variant-numeric:tabular-nums}
+.goal .gn{flex:1;min-width:0;font-weight:600}
+.goal .gn small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.goal b{flex:none;font-variant-numeric:tabular-nums}
+.ev.match{align-items:flex-start;padding:12px 0}
+.ev.match .t{padding-top:2px}
+.ev .m .tm{display:flex;align-items:center;gap:9px;margin:3px 0}
+.ev .m .tm .tn{flex:1;min-width:0;font-size:15px;font-weight:600;color:var(--text);white-space:normal}
+.ev .m .tm .sc{flex:none;min-width:22px;text-align:right;font-size:19px;font-weight:800;color:var(--text);font-variant-numeric:tabular-nums}
+.ev .m .tm .lg{flex:none;width:24px;height:24px;object-fit:contain;display:inline-block}
+.ev .m .mf{display:flex;align-items:center;gap:8px;margin-top:5px}
+.tbl{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.tbl th{font-size:11px;font-weight:600;color:var(--muted);text-align:right;padding:8px 8px 6px}
+.tbl td{padding:9px 8px;text-align:right;border-top:1px solid var(--line);font-size:14px}
+.tbl .pos{width:34px;text-align:center;color:var(--muted);font-weight:700}
+.tbl .nm{text-align:left;font-weight:600}
+.tbl .nm .sb{font-size:12px;font-weight:400;color:var(--muted)}
+.tbl .tw{display:flex;align-items:center;gap:9px}
+.tbl .lg{flex:none;width:22px;height:22px;object-fit:contain;display:inline-block}
+.tbl .pt{font-weight:800;color:var(--text)}
+.tbl tr.cl .pos{box-shadow:inset 3px 0 #3b82f6;color:var(--text)}
+.tbl tr.el .pos{box-shadow:inset 3px 0 var(--accent);color:var(--text)}
+.tbl tr.rel .pos,.tbl tr.rel2 .pos{box-shadow:inset 3px 0 var(--accent);color:var(--text)}
+.tbl tr.down .pos{box-shadow:inset 3px 0 #ef4444;color:var(--text)}
+.live{font-size:11px;font-weight:800;letter-spacing:.6px;color:#1a0f00;background:var(--accent);padding:2px 8px;border-radius:999px;animation:pulse 1.6s infinite}
+.fin{font-size:11px;font-weight:700;color:var(--muted);border:1px solid var(--line);padding:1px 8px;border-radius:999px}
+@keyframes pulse{50%{opacity:.55}}
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px}
+.item{display:flex;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:10px;align-items:center;min-width:0}
+.item .th{flex:none;width:52px;aspect-ratio:2/3;border-radius:10px;overflow:hidden;background:var(--bg2);border:0;padding:0}
+.item .th img{width:100%;height:100%;object-fit:cover}
+.item .m{min-width:0;flex:1}
+.item .m b{display:block;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item .m span{font-size:12px;color:var(--muted);display:block;margin-top:2px}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:rgba(255,138,31,.15);color:var(--accent2);margin-right:6px}
+.tag.new{background:rgba(76,208,138,.16);color:var(--ok)}
+.mini{flex:none;display:flex;flex-direction:column;gap:6px}
+.mini button{padding:6px 10px;border-radius:10px;background:var(--bg2);border:1px solid var(--line);font-size:12px;color:var(--muted)}
+.mini button.on{border-color:var(--accent);color:var(--accent2)}
+.day{margin:18px 0 8px;font-size:13px;font-weight:700;color:var(--accent2);text-transform:uppercase;letter-spacing:.8px}
+.news{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.n{display:flex;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:10px;text-decoration:none;color:inherit;min-width:0}
+.n img{flex:none;width:92px;height:68px;border-radius:10px;object-fit:cover;background:var(--bg2)}
+.n .m{min-width:0}
+.n b{font-weight:600;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.n span{font-size:12px;color:var(--muted);display:block;margin-top:4px}
+.filter{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 14px;margin:2px 0 12px;font-size:13px;color:var(--muted)}
+.filter input[type=range]{flex:1;accent-color:var(--accent)}
+.filter b{color:var(--text);min-width:78px;text-align:right}
+.more{display:block;margin:18px auto 0;padding:11px 22px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--text)}
+.ai p{margin:0 0 8px;color:#e6e6ee;line-height:1.45}
+.ai p:last-child{margin-bottom:0}
+.note{padding:14px;border-radius:14px;background:var(--card);border:1px dashed var(--line);color:var(--muted);font-size:13px}
+.note b{color:var(--text)}
+.sk{height:190px;border-radius:var(--r);background:linear-gradient(90deg,var(--card),#1e1e28,var(--card));background-size:200% 100%;animation:sh 1.3s infinite}
+@keyframes sh{to{background-position:-200% 0}}
+nav{position:fixed;left:0;right:0;bottom:0;transform:translateZ(0);z-index:30;display:flex;justify-content:center;padding:8px 8px calc(8px + var(--safe-b));background:rgba(11,11,15,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--line)}
+nav .in{display:flex;gap:2px;width:100%;max-width:680px}
+nav button{flex:1;padding:8px 2px;border-radius:12px;font-size:11.5px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px}
+nav button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+nav button.on{color:var(--accent)}
+.sheet{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.6)}
+.sheet[hidden]{display:none}
+.phint{font-size:12px;color:var(--muted);margin:-4px 0 10px}
+.sheet .box{width:100%;max-width:640px;max-height:88vh;overflow:auto;background:var(--bg2);border:1px solid var(--line);border-radius:24px 24px 0 0;padding:18px 18px calc(22px + var(--safe-b))}
+@media(min-width:700px){.sheet{align-items:center}.sheet .box{border-radius:24px}}
+.sheet h3{margin:0 0 4px;font-size:20px}
+.sheet .hd{display:flex;gap:14px}
+.sheet .hd img{width:96px;border-radius:12px;flex:none}
+.sheet p{color:#d2d2da;margin:12px 0}
+.pv{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.pv span{padding:5px 10px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-size:12px}
+.sheet .btns{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.sheet .btns button,.sheet .btns a{flex:1;min-width:110px;text-align:center;padding:11px;border-radius:12px;background:var(--card);border:1px solid var(--line);color:var(--text);text-decoration:none;font-size:14px}
+.sheet .btns .on{border-color:var(--accent);color:var(--accent2)}
+.sheet small{color:var(--muted);display:block;margin-top:14px}
+#toast{position:fixed;left:50%;bottom:calc(92px + var(--safe-b));transform:translateX(-50%);z-index:60;background:#fff;color:#111;padding:9px 16px;border-radius:999px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:.25s}
+#toast.show{opacity:1}
+.foot{margin:30px 0 6px;font-size:11.5px;color:var(--muted);text-align:center}
+@media(min-width:900px){.row .card{width:156px}.grid{grid-template-columns:repeat(auto-fill,minmax(156px,1fr))}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><h1>Heim<span>kino</span></h1><div class="by">by BierAmStrand</div></div>
+  <div class="hbtns"><button class="gear" data-act="search" aria-label="Suche"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button><button class="modebtn" data-act="mode" id="modeBtn"></button>
+  <button class="gear" data-act="settings" aria-label="Einstellungen"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></div>
+</header>
+<main id="view"></main>
+<nav><div class="in" id="nav"></div></nav>
+<div class="sheet" id="sheet" hidden><div class="box" id="sheetBox"></div></div>
+<div id="toast"></div>
+
+<script src="config.js"></script>
+<script>
+/* ============ Grundlagen ============ */
+// Zoomen sperren (iOS ignoriert user-scalable, daher zusätzlich Gesten blockieren)
+['gesturestart','gesturechange','gestureend'].forEach(t => document.addEventListener(t, e => e.preventDefault()));
+document.addEventListener('touchmove', e => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
+let lastTap = 0;
+document.addEventListener('touchend', e => { const n = Date.now(); if (n - lastTap < 300) e.preventDefault(); lastTap = n; }, { passive: false });
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const TZ = 'Europe/Berlin';
+const IMG = 'https://image.tmdb.org/t/p/';
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const store = {
+  get(k, d) { try { const v = localStorage.getItem('mn_' + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('mn_' + k, JSON.stringify(v)); } catch (e) {} }
+};
+
+/* Streamingdienste in Deutschland (TMDB Anbieter IDs, hier bei Bedarf anpassen) */
+/* Hauptbereiche, die sich in den Einstellungen ein und ausschalten lassen */
+const REL_DEFS = [['kino', 'Kino'], ['stream', 'Streaming'], ['bluray', 'Bluray und DVD'], ['serien', 'Serien'], ['doku', 'Dokus'], ['kids', 'Kinder']];
+const SPORT_DEFS = [['bl1', 'Bundesliga'], ['bl2', '2. Liga'], ['ucl', 'Champions League'], ['dfb', 'DFB Pokal'], ['nat', 'Nationalmannschaft'], ['f1', 'Formel 1']];
+const PROVIDERS = {
+  netflix:  { name: 'Netflix',     ids: '8' },
+  prime:    { name: 'Prime Video', ids: '9|119' },
+  disney:   { name: 'Disney Plus', ids: '337' },
+  paramount:{ name: 'Paramount Plus', ids: '531' },
+  hbo:      { name: 'HBO Max',     ids: '1899|384' },
+  wow:      { name: 'WOW',         ids: '30' },
+  apple:    { name: 'Apple TV',    ids: '350' }
+};
+
+/* Zusätzliche Bereiche neben Filmen und Serien (TMDB Genres; Kinderfilme nach deutscher FSK Freigabe 0 oder 6) */
+const EXTRA = {
+  doku: { movie: { with_genres: '99' }, tv: { with_genres: '99' } },
+  kids: { movie: { certification_country: 'DE', 'certification.lte': '6', with_genres: '16|10751' }, tv: { with_genres: '10762|10751' } }
+};
+
+/* ============ Daten, Datum, Hilfen ============ */
+const dayKey = ts => new Intl.DateTimeFormat('en-CA', { timeZone: TZ }).format(ts);
+const todayStr = () => dayKey(Date.now());
+const addDays = (str, n) => { const d = new Date(str + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
+const diffDays = (a, b) => Math.round((new Date(b + 'T12:00:00Z') - new Date(a + 'T12:00:00Z')) / 86400000);
+const fmtTime = ts => new Intl.DateTimeFormat('de-DE', { hour: '2-digit', minute: '2-digit', timeZone: TZ }).format(ts);
+function dayLabel(str) {
+  const t = todayStr();
+  if (str === t) return 'Heute';
+  if (str === addDays(t, 1)) return 'Morgen';
+  if (str === addDays(t, -1)) return 'Gestern';
+  return new Intl.DateTimeFormat('de-DE', { weekday: 'short', day: 'numeric', month: 'long', timeZone: 'UTC' }).format(new Date(str + 'T12:00:00Z'));
+}
+function ago(ts) {
+  const m = Math.round((Date.now() - ts) / 60000);
+  if (m < 60) return 'vor ' + Math.max(m, 1) + ' Min';
+  if (m < 1440) return 'vor ' + Math.round(m / 60) + ' Std';
+  return 'vor ' + Math.round(m / 1440) + ' Tg';
+}
+
+/* ============ Netzwerk ============ */
+const cache = new Map();
+async function getJSON(url, ttl = 600000) {
+  const hit = cache.get(url);
+  if (hit && Date.now() - hit.t < ttl) return hit.v;
+  const r = await fetch(url);
+  let data = null;
+  try { data = await r.json(); } catch (e) {}
+  if (!r.ok) {
+    const err = new Error((data && data.error) || ('Fehler ' + r.status));
+    err.status = r.status;
+    throw err;
+  }
+  cache.set(url, { t: Date.now(), v: data });
+  return data;
+}
+const tmdb = (path, params = {}) => getJSON('/.netlify/functions/tmdb?' + new URLSearchParams({ path, ...params }));
+const viaSport = u => getJSON('/.netlify/functions/sport?' + new URLSearchParams({ u }), 45000);
+
+function norm(x, type) {
+  const t = x.media_type && x.media_type !== 'person' ? x.media_type : type;
+  return {
+    key: t + '_' + x.id, id: x.id, type: t,
+    title: x.title || x.name || '', date: x.release_date || x.first_air_date || '',
+    poster: x.poster_path || '', pop: x.popularity || 0, vote: x.vote_average || 0, votes: x.vote_count || 0,
+    overview: x.overview || ''
+  };
+}
+/* Hype Wert 0 bis 100: Beliebtheit (60%), Bewertung (25%), Anzahl der Stimmen (15%) */
+function addHype(list) {
+  const maxP = Math.max(1, ...list.map(i => i.pop));
+  list.forEach(i => {
+    const p = Math.log1p(i.pop) / Math.log1p(maxP);
+    const r = i.vote / 10;
+    const v = Math.min(1, Math.log1p(i.votes) / Math.log(5000));
+    i.hype = Math.round(100 * (0.6 * p + 0.25 * r + 0.15 * v));
+  });
+  return list;
+}
+const discover = async (type, params) => ((await tmdb('/discover/' + type, { language: 'de-DE', ...params })).results || []).map(x => norm(x, type));
+
+/* Deutsches Startdatum holen: discover liefert nur das weltweite Erstdatum, bei Neuauflagen steht dort ein altes Jahr */
+const DE_DATES = new Map();
+async function deDates(id) {
+  if (DE_DATES.has(id)) return DE_DATES.get(id);
+  let out = [];
+  try {
+    const r = await tmdb('/movie/' + id + '/release_dates', {});
+    const de = (r.results || []).find(x => x.iso_3166_1 === 'DE');
+    out = de ? de.release_dates.map(x => ({ type: x.type, date: (x.release_date || '').slice(0, 10) })) : [];
+  } catch (e) { out = null; }
+  DE_DATES.set(id, out);
+  return out;
+}
+async function fixDates(items, types, from, to) {
+  await Promise.all(items.filter(i => i.type === 'movie' && !i.deChecked).map(async i => {
+    i.deChecked = true;
+    const d = await deDates(i.id);
+    if (!d) return;
+    const hit = d.filter(x => types.includes(String(x.type)) && x.date >= from && x.date <= to).map(x => x.date).sort()[0];
+    if (hit) i.date = hit; else if (d.length || i.date < from || i.date > to) i.drop = true;
+  }));
+}
+
+/* ============ Listen: gesehen und Merkliste (lokal, optional Firebase) ============ */
+let lists = store.get('lists', { seen: {}, watch: {} });
+lists.seen = lists.seen || {}; lists.watch = lists.watch || {};
+let fbRef = null, fb = null;
+const ITEMS = new Map();
+const slim = i => ({ key: i.key, id: i.id, type: i.type, title: i.title, date: i.date, poster: i.poster });
+function toggleList(kind, key) {
+  const it = ITEMS.get(key) || lists.seen[key] || lists.watch[key];
+  if (!it) return;
+  const on = !lists[kind][key];
+  if (on) lists[kind][key] = slim(it); else delete lists[kind][key];
+  store.set('lists', lists);
+  if (fbRef) {
+    try {
+      if (on) fbRef.set({ [kind]: { [key]: slim(it) } }, { merge: true });
+      else fbRef.update({ [kind + '.' + key]: fb.firestore.FieldValue.delete() });
+    } catch (e) {}
+  }
+  toast(kind === 'seen' ? (on ? 'Als gesehen markiert' : 'Markierung entfernt') : (on ? 'Auf der Merkliste' : 'Von der Merkliste entfernt'));
+  syncButtons(key);
+}
+function syncButtons(key) {
+  const seen = !!lists.seen[key], watch = !!lists.watch[key];
+  $$('[data-act="seen"][data-k="' + key + '"]').forEach(b => b.classList.toggle('on', seen));
+  $$('[data-act="watch"][data-k="' + key + '"]').forEach(b => b.classList.toggle('on', watch));
+  if (state.tab === 'listen') { renderTab(); return; }
+  $$('.card[data-k="' + key + '"]').forEach(c => {
+    const pm = $('.poster', c);
+    const m = $('.seenmark', c);
+    if (seen && !m && pm) pm.insertAdjacentHTML('beforeend', '<span class="seenmark">Gesehen</span>');
+    if (!seen && m) m.remove();
+    if (seen && state.hideSeen) c.remove();
+  });
+}
+async function initSync() {
+  const cfg = window.FIREBASE_CONFIG;
+  if (!cfg || !cfg.apiKey) return;
+  const load = src => new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+  try {
+    await load('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js');
+    await load('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js');
+    fb = window.firebase;
+    fb.initializeApp(cfg);
+    fbRef = fb.firestore().collection('medien').doc('listen');
+    fbRef.onSnapshot(snap => {
+      if (!snap.exists) { fbRef.set(lists, { merge: true }).catch(() => {}); return; }
+      const d = snap.data() || {};
+      lists = { seen: d.seen || {}, watch: d.watch || {} };
+      store.set('lists', lists);
+      if (state.tab === 'listen') renderTab();
+    });
+  } catch (e) { fbRef = null; }
+}
+
+/* ============ Darstellung: Karten ============ */
+function poster(i, w = 'w342') {
+  return i.poster ? '<img loading="lazy" src="' + IMG + w + i.poster + '" alt="">' : '<div class="noimg">' + esc(i.title) + '</div>';
+}
+/* Kurzer Hinweis, wo ein Titel in Deutschland läuft */
+const PROV_CACHE = new Map();
+const PROV_SHORT = { 'Amazon Prime Video': 'Prime Video', 'Amazon Prime Video with Ads': 'Prime Video', 'Disney Plus': 'Disney Plus', 'Paramount Plus': 'Paramount Plus', 'Paramount+ Amazon Channel': 'Paramount Plus', 'WOW': 'WOW', 'Sky Go': 'Sky', 'Apple TV Plus': 'Apple TV', 'Apple TV+': 'Apple TV', 'Netflix Standard with Ads': 'Netflix', 'HBO Max': 'HBO Max' };
+async function provLine(i) {
+  if (PROV_CACHE.has(i.key)) return PROV_CACHE.get(i.key);
+  let txt = '';
+  try {
+    const r = await tmdb('/' + i.type + '/' + i.id + '/watch/providers', {});
+    const de = r.results && r.results.DE || {};
+    const names = [...new Set((de.flatrate || []).map(p => PROV_SHORT[p.provider_name] || p.provider_name))].slice(0, 2);
+    txt = names.length ? names.join(', ') : (de.rent || de.buy ? 'Leihen oder Kaufen' : (i.type === 'movie' ? 'Kino oder noch offen' : ''));
+  } catch (e) { txt = ''; }
+  PROV_CACHE.set(i.key, txt);
+  return txt;
+}
+function card(i, opt = {}) {
+  ITEMS.set(i.key, i);
+  const seen = !!lists.seen[i.key], watch = !!lists.watch[i.key];
+  const badge = opt.hype && i.hype != null ? '<span class="badge">Hype ' + i.hype + '</span>' : '';
+  const rank = opt.rank ? '<span class="rank">' + opt.rank + '</span>' : '';
+  const sub = opt.sub != null ? opt.sub : (i.date ? dayLabelShort(i.date) : '');
+  return '<article class="card" data-k="' + i.key + '"><button class="poster" data-open="' + i.key + '">' + poster(i) + badge + rank + (seen ? '<span class="seenmark">Gesehen</span>' : '') + '</button>' +
+    '<div class="ct">' + esc(i.title) + '</div><div class="cs">' + esc(sub) + '</div>' +
+    '<div class="acts"><button data-act="seen" data-k="' + i.key + '" class="' + (seen ? 'on' : '') + '">Gesehen</button><button data-act="watch" data-k="' + i.key + '" class="' + (watch ? 'on' : '') + '">Merken</button></div></article>';
+}
+function dayLabelShort(str) {
+  return new Intl.DateTimeFormat('de-DE', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(new Date(str + 'T12:00:00Z'));
+}
+const visible = list => state.hideSeen ? list.filter(i => !lists.seen[i.key]) : list;
+const row = html => '<div class="row">' + html + '</div>';
+const skel = n => '<div class="row">' + Array.from({ length: n || 5 }, () => '<div class="card"><div class="sk"></div></div>').join('') + '</div>';
+function errBox(e) {
+  if (e && /TMDB_API_KEY/.test(e.message)) return '<div class="note"><b>TMDB Schlüssel fehlt.</b> Trage in Netlify unter Site configuration, Environment variables die Variable <b>TMDB_API_KEY</b> ein und starte den Deploy neu.</div>';
+  return '<div class="note"><b>Konnte nicht geladen werden.</b> ' + esc(e && e.message || '') + ' <button class="chip" data-act="reload" style="margin-left:6px">Neu laden</button></div>';
+}
+const FOLDS = store.get('folds', {});
+const foldH2 = (key, label) => '<h2 class="fold' + (FOLDS[key] ? ' shut' : '') + '" data-fold="' + key + '">' + label + '</h2>';
+const seg = (name, opts, cur) => '<div class="chips">' + opts.map(([v, l]) => '<button class="chip ' + (cur === v ? 'on' : '') + '" data-s="' + name + '" data-v="' + v + '">' + l + '</button>').join('') + '</div>';
+
+/* ============ Sport ============ */
+const LEAGUES = [
+  { id: 'bl1', name: 'Bundesliga', api: 'bl1' },
+  { id: 'bl2', name: '2. Liga', api: 'bl2' },
+  { id: 'ucl', name: 'Champions League', api: 'ucl' },
+  { id: 'dfb', name: 'DFB Pokal', api: 'dfb' }
+];
+function season() { const d = new Date(); return d.getMonth() >= 6 ? d.getFullYear() : d.getFullYear() - 1; }
+async function loadLeague(l) {
+  const data = await viaSport('https://api.openligadb.de/getmatchdata/' + l.api + '/' + season());
+  if (!Array.isArray(data)) return [];
+  return data.map(m => {
+    const ts = Date.parse(m.matchDateTimeUTC || '') || Date.parse(m.matchDateTime || '');
+    const results = m.matchResults || [];
+    const fin = results.find(r => r.resultTypeID === 2) || results.slice().sort((x, y) => (y.resultOrderID || 0) - (x.resultOrderID || 0))[0];
+    const goals = (m.goals || []).slice().sort((x, y) => (x.goalID || 0) - (y.goalID || 0));
+    const lastGoal = goals[goals.length - 1];
+    const now = Date.now();
+    let status = 'upcoming', s1 = null, s2 = null;
+    if (m.matchIsFinished) {
+      status = 'done';
+      if (fin) { s1 = fin.pointsTeam1; s2 = fin.pointsTeam2; }
+      else if (lastGoal) { s1 = lastGoal.scoreTeam1; s2 = lastGoal.scoreTeam2; }
+      else { s1 = 0; s2 = 0; }
+    } else if (ts <= now) {
+      status = now - ts < 3.5 * 3600000 ? 'live' : 'pending';
+      if (status === 'live') { s1 = lastGoal ? lastGoal.scoreTeam1 : 0; s2 = lastGoal ? lastGoal.scoreTeam2 : 0; }
+    }
+    return {
+      kind: 'match', src: 'oldb', ts, league: l.id, leagueName: l.name, status, s1, s2,
+      info: { id: m.matchID, team1Id: m.team1 && m.team1.teamId, team2Id: m.team2 && m.team2.teamId, stadium: m.location && m.location.locationStadium || '', city: m.location && m.location.locationCity || '', viewers: m.numberOfViewers || 0, group: m.group && m.group.groupName || '', half: results.find(r => r.resultTypeID === 1) || null, goals },
+      t1: m.team1 && m.team1.teamName || '?', t2: m.team2 && m.team2.teamName || '?',
+      i1: m.team1 && m.team1.teamIconUrl || '', i2: m.team2 && m.team2.teamIconUrl || '',
+      sub: l.name + (m.group && m.group.groupName ? ' · ' + m.group.groupName : '')
+    };
+  }).filter(e => e.ts);
+}
+async function loadNat() {
+  const base = 'https://www.thesportsdb.com/api/v1/json/3/';
+  const [nx, ls] = await Promise.allSettled([viaSport(base + 'eventsnext.php?id=133907'), viaSport(base + 'eventslast.php?id=133907')]);
+  const raw = [];
+  if (nx.status === 'fulfilled' && nx.value && Array.isArray(nx.value.events)) raw.push(...nx.value.events);
+  if (ls.status === 'fulfilled' && ls.value && Array.isArray(ls.value.results)) raw.push(...ls.value.results);
+  if (nx.status === 'rejected' && ls.status === 'rejected') throw new Error('Nationalmannschaft nicht erreichbar');
+  const seen = new Set();
+  const now = Date.now();
+  return raw.filter(m => m && !seen.has(m.idEvent) && seen.add(m.idEvent)).map(m => {
+    let ts = Date.parse(m.strTimestamp || '');
+    if (m.strTimestamp && !/[zZ]|[+-]\d\d:?\d\d$/.test(m.strTimestamp)) ts = Date.parse(m.strTimestamp + 'Z');
+    if (!ts && m.dateEvent) ts = Date.parse(m.dateEvent + 'T' + (m.strTime || '20:45:00') + 'Z');
+    const has = m.intHomeScore !== null && m.intHomeScore !== undefined && m.intHomeScore !== '' && m.intAwayScore !== null && m.intAwayScore !== undefined && m.intAwayScore !== '';
+    let status = 'upcoming';
+    if (ts && ts <= now) status = has ? (now - ts < 2.5 * 3600000 && !/finish|ft|aet|pen/i.test(m.strStatus || '') ? 'live' : 'done') : (now - ts < 3.5 * 3600000 ? 'live' : 'pending');
+    return {
+      kind: 'match', ts, league: 'nat', leagueName: 'Nationalmannschaft', status,
+      s1: has ? Number(m.intHomeScore) : (status === 'live' ? 0 : null), s2: has ? Number(m.intAwayScore) : (status === 'live' ? 0 : null),
+      t1: m.strHomeTeam || '?', t2: m.strAwayTeam || '?', i1: m.strHomeTeamBadge ? m.strHomeTeamBadge + '/tiny' : '', i2: m.strAwayTeamBadge ? m.strAwayTeamBadge + '/tiny' : '',
+      sub: m.strLeague || 'Länderspiel',
+      info: { venue: m.strVenue || '', city: m.strCity || '', country: m.strCountry || '', viewers: Number(m.intSpectators) || 0, round: m.intRound || '' }
+    };
+  }).filter(e => e.ts);
+}
+async function loadF1() {
+  const y = new Date().getFullYear();
+  let races = [];
+  for (const url of ['https://api.jolpi.ca/ergast/f1/current.json', 'https://api.jolpi.ca/ergast/f1/' + (y + 1) + '.json']) {
+    try {
+      const d = await viaSport(url);
+      races = (d.MRData && d.MRData.RaceTable && d.MRData.RaceTable.Races) || [];
+    } catch (e) { races = []; }
+    const evs = f1Events(races);
+    if (evs.some(e => e.ts > Date.now() - 6 * 3600000)) return evs;
+  }
+  return f1Events(races);
+}
+function f1Events(races) {
+  const out = [];
+  const tsOf = o => o && o.date ? Date.parse(o.date + 'T' + (o.time || '12:00:00Z')) : 0;
+  races.forEach(r => {
+    const defs = [['Freies Training 1', r.FirstPractice], ['Freies Training 2', r.SecondPractice], ['Freies Training 3', r.ThirdPractice], ['Sprint Qualifying', r.SprintQualifying || r.SprintShootout], ['Sprint', r.Sprint], ['Qualifying', r.Qualifying], ['Rennen', { date: r.date, time: r.time }]];
+    const sessions = defs.map(([label, o]) => ({ label, ts: tsOf(o) })).filter(x => x.ts).sort((a, b) => a.ts - b.ts);
+    const info = { season: r.season || '', raceName: r.raceName, circuit: r.Circuit && r.Circuit.circuitName || '', locality: r.Circuit && r.Circuit.Location && r.Circuit.Location.locality || '', country: r.Circuit && r.Circuit.Location && r.Circuit.Location.country || '', round: r.round || '', sessions };
+    ['Qualifying', 'Sprint Qualifying', 'Sprint', 'Rennen'].forEach(label => {
+      const x = sessions.find(z => z.label === label);
+      if (x) out.push({ ts: x.ts, league: 'f1', leagueName: 'Formel 1', title: 'Formel 1 ' + label, sub: r.raceName + (info.locality ? ' · ' + info.locality : ''), icon: '', src: 'f1', session: label, info });
+    });
+  });
+  return out;
+}
+async function loadSport(ids) {
+  const jobs = [];
+  LEAGUES.filter(l => ids.includes(l.id)).forEach(l => jobs.push(loadLeague(l).then(v => ({ id: l.id, v }))));
+  if (ids.includes('nat')) jobs.push(loadNat().then(v => ({ id: 'nat', v })));
+  if (ids.includes('f1')) jobs.push(loadF1().then(v => ({ id: 'f1', v })));
+  const res = await Promise.allSettled(jobs);
+  const events = [], failed = [];
+  res.forEach(r => { if (r.status === 'fulfilled') events.push(...r.value.v); else failed.push(r.reason); });
+  return { events, failedCount: failed.length };
+}
+const MATCHES = new Map();
+let matchSeq = 0;
+function evRow(e) {
+  const key = e.key || (e.key = 'm' + (++matchSeq));
+  MATCHES.set(key, e);
+  if (e.kind !== 'match') {
+    return '<div class="ev" data-match="' + key + '"><div class="t">' + fmtTime(e.ts) + '</div><div class="m"><b>' + esc(e.title) + '</b><span>' + esc(e.sub) + '</span></div></div>';
+  }
+  const team = (name, icon, score) => '<div class="tm">' + (icon ? '<img class="lg" loading="lazy" src="' + esc(icon) + '" alt="" onerror="this.style.visibility=\'hidden\'">' : '<span class="lg"></span>') +
+    '<span class="tn">' + esc(name) + '</span>' + (score == null ? '' : '<span class="sc">' + esc(score) + '</span>') + '</div>';
+  const badge = e.status === 'live' ? '<span class="live">LIVE</span>' : e.status === 'done' ? '<span class="fin">Beendet</span>' : e.status === 'pending' ? '<span class="fin">Ergebnis folgt</span>' : '';
+  return '<div class="ev match" data-match="' + key + '"><div class="t">' + fmtTime(e.ts) + '</div><div class="m">' + team(e.t1, e.i1, e.s1) + team(e.t2, e.i2, e.s2) +
+    '<div class="mf"><span>' + esc(e.sub) + '</span>' + badge + '</div></div></div>';
+}
+function sportRows(events) { return events.map(evRow).join(''); }
+function groupedSport(events) {
+  const by = {};
+  events.forEach(e => { (by[dayKey(e.ts)] = by[dayKey(e.ts)] || []).push(e); });
+  return Object.keys(by).sort().map(d => '<div class="day">' + dayLabel(d) + '</div><div class="panel" style="padding:6px 16px">' + sportRows(by[d].sort((a, b) => a.ts - b.ts)) + '</div>').join('');
+}
+
+/* ============ Episoden ============ */
+async function episodeItems() {
+  const t = todayStr();
+  const tr = await tmdb('/trending/tv/week', { language: 'de-DE' });
+  const hyped = addHype((tr.results || []).map(x => norm(x, 'tv'))).sort((a, b) => b.hype - a.hype).slice(0, 8);
+  const shows = new Map();
+  Object.values(lists.watch).filter(i => i.type === 'tv').forEach(i => shows.set(i.id, { ...i, src: 'Merkliste' }));
+  hyped.forEach(i => { if (!shows.has(i.id)) shows.set(i.id, { ...i, src: 'Hype' }); });
+  const res = await Promise.allSettled([...shows.values()].map(s => tmdb('/tv/' + s.id, { language: 'de-DE' }).then(d => ({ s, d }))));
+  const out = [];
+  res.forEach(r => {
+    if (r.status !== 'fulfilled') return;
+    const { s, d } = r.value;
+    const show = { key: 'tv_' + s.id, id: s.id, type: 'tv', title: s.title || d.name, poster: s.poster || d.poster_path || '', date: d.first_air_date || '' };
+    const last = d.last_episode_to_air, next = d.next_episode_to_air;
+    if (last && last.air_date) { const n = diffDays(last.air_date, t); if (n >= 0 && n <= 14) out.push({ show, ep: last, when: last.air_date, state: 'neu', src: s.src }); }
+    if (next && next.air_date) { const n = diffDays(t, next.air_date); if (n >= 0 && n <= 14) out.push({ show, ep: next, when: next.air_date, state: 'bald', src: s.src }); }
+  });
+  return out;
+}
+function epLabel(e) { return 'Staffel ' + e.ep.season_number + ', Folge ' + e.ep.episode_number + (e.ep.name ? ' · ' + e.ep.name : ''); }
+function epRow(e) {
+  if (!ITEMS.has(e.show.key)) ITEMS.set(e.show.key, e.show);
+  return '<div class="item"><button class="th" data-open="' + e.show.key + '">' + poster(e.show, 'w154') + '</button><div class="m"><b>' + esc(e.show.title) + '</b>' +
+    '<span><span class="tag ' + (e.state === 'neu' ? 'new' : '') + '" style="display:inline-block">' + (e.state === 'neu' ? 'Neue Folge online' : 'Nächste Folge') + '</span>' + dayLabel(e.when) + '</span>' +
+    '<span>' + esc(epLabel(e)) + ' · ' + esc(e.src) + '</span></div></div>';
+}
+
+/* ============ Ansichten ============ */
+const state = {
+  tab: store.get('tab', 'heute'), hideSeen: store.get('hideSeen', false), provOn: store.get('provOn', Object.keys(PROVIDERS)), dirty: false,
+  lite: store.get('lite', false), showWeek: store.get('showWeek', true), showToday: store.get('showToday', true),
+  relOn: store.get('relOn', REL_DEFS.map(d => d[0])), sportOn: store.get('sportOn', SPORT_DEFS.map(d => d[0])),
+  chartsProv: 'netflix', relSeg: 'kino', relPop: store.get('relPop', 10), relPage: 1,
+  goodSeg: 'movie', goodProv: 'all', goodPage: 1, listSeg: 'watch', sportSeg: 'alle', sportView: 'plan'
+};
+const activeProv = () => { const l = Object.entries(PROVIDERS).filter(([k]) => state.provOn.includes(k)); return l.length ? l : Object.entries(PROVIDERS); };
+const activeRel = () => REL_DEFS.filter(([id]) => state.relOn.includes(id));
+let token = 0;
+const TABS = [
+  ['heute', 'Heute', '<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>'],
+  ['charts', 'Charts', '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'],
+  ['releases', 'Releases', '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'],
+  ['gut', 'Top', '<path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/>'],
+  ['listen', 'Listen', '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>'],
+  ['sport', 'Sport', '<circle cx="12" cy="12" r="9"/><path d="M12 7l4 3-1.5 5h-5L8 10z"/>']
+];
+function renderNav() {
+  $('#nav').innerHTML = TABS.filter(([id]) => !(state.lite && id === 'gut')).map(([id, l, svg]) => '<button data-tab="' + id + '" class="' + (state.tab === id ? 'on' : '') + '"><svg viewBox="0 0 24 24">' + svg + '</svg>' + l + '</button>').join('');
+}
+function go(tab) { state.tab = tab; store.set('tab', tab); renderNav(); window.scrollTo(0, 0); renderTab(); }
+function renderTab(opts) { const t = ++token; ({ heute: vHeute, charts: vCharts, releases: vReleases, gut: vGut, listen: vListen, sport: vSport })[state.tab](t, opts || {}); }
+const alive = t => t === token;
+const foot = () => '<div class="foot">Filmdaten von TMDB. Streaming Verfügbarkeit von JustWatch.</div>';
+
+/* ---- Heute ---- */
+async function vHeute(t) {
+  const v = $('#view');
+  const d = new Intl.DateTimeFormat('de-DE', { weekday: 'long', day: 'numeric', month: 'long', timeZone: TZ }).format(new Date());
+  v.innerHTML = '<h2>' + d + '</h2><div id="h_today"></div><div id="h_ai">' + (state.showWeek && !state.lite ? weekHtml() : '') + '</div><h2>Gerade gehypt' + (state.lite ? '' : ' <small>Hype Wert aus Beliebtheit und Bewertung</small>') + '</h2><div id="h_hype">' + skel() + '</div><h2>Neue Folgen</h2><div id="h_eps">' + skel(1) + '</div>' + (state.lite ? '' : foldH2('news', 'News') + '<div id="h_news"><div class="sk" style="height:90px"></div></div>') + foot();
+  const today = todayStr();
+  const eps = episodeItems().catch(() => []);
+  const sportP = state.showToday && state.sportOn.length ? loadSport(state.sportOn.slice()).catch(() => ({ events: [] })) : Promise.resolve({ events: [] });
+  const relP = state.showToday ? discover('movie', { region: 'DE', 'release_date.gte': today, 'release_date.lte': today, with_release_type: '2|3|4|5', sort_by: 'popularity.desc' }).catch(() => []) : Promise.resolve([]);
+
+  tmdb('/trending/all/week', { language: 'de-DE' }).then(r => {
+    if (!alive(t)) return;
+    const list = addHype((r.results || []).filter(x => x.media_type !== 'person').map(x => norm(x, 'movie'))).sort((a, b) => b.hype - a.hype);
+    const top = visible(list).slice(0, 12);
+    $('#h_hype').innerHTML = row(top.map(i => card(i, { hype: true, sub: i.type === 'tv' ? 'Serie' : 'Film' })).join(''));
+    top.forEach(i => provLine(i).then(txt => {
+      const el = alive(t) && document.querySelector('#h_hype .card[data-k="' + i.key + '"] .cs');
+      if (el && txt) el.textContent = (i.type === 'tv' ? 'Serie' : 'Film') + ' · ' + txt;
+    }));
+  }).catch(e => { if (alive(t)) $('#h_hype').innerHTML = errBox(e); });
+
+  Promise.all([eps, sportP, relP]).then(([ev, sp, rel]) => {
+    if (!alive(t)) return;
+    const lines = [];
+    (sp.events || []).filter(e => dayKey(e.ts) === today).sort((a, b) => a.ts - b.ts).forEach(e => lines.push(evRow(e)));
+    ev.filter(e => e.when === today).forEach(e => lines.push('<div class="ev"><div class="t">Neu</div><div class="m"><b>' + esc(e.show.title) + '</b><span>' + esc(epLabel(e)) + '</span></div></div>'));
+    rel.filter(i => i.pop >= 8).slice(0, 4).forEach(i => { ITEMS.set(i.key, i); lines.push('<div class="ev"><div class="t">Start</div><div class="m"><b>' + esc(i.title) + '</b><span>Film Release heute</span></div></div>'); });
+    const MAXL = 8;
+    $('#h_today').innerHTML = state.showToday && lines.length ? '<div class="panel' + (FOLDS.plan ? ' shut' : '') + '"><h3 class="fold" data-pfold="plan">Heute auf dem Plan</h3>' + lines.slice(0, MAXL).join('') + (lines.length > MAXL ? '<div class="ev"><div class="m"><span>und ' + (lines.length - MAXL) + ' weitere Einträge, mehr unter Sport und Releases</span></div></div>' : '') + '</div>' : '';
+    const upcoming = ev.slice().sort((a, b) => a.state === b.state ? a.when.localeCompare(b.when) : (a.state === 'neu' ? -1 : 1));
+    $('#h_eps').innerHTML = upcoming.length ? '<div class="list">' + upcoming.map(epRow).join('') + '</div>' : '<div class="note">Gerade keine neuen Folgen bei Merklisten Serien oder gehypten Serien.</div>';
+  });
+
+  if (!state.lite) getJSON('/.netlify/functions/rss').then(r => {
+    if (!alive(t)) return;
+    const items = r.items || [];
+    const bad = (r.status || []).filter(s => !s.ok).map(s => s.id);
+    $('#h_news').innerHTML = (items.length ? '<div class="news">' + items.slice(0, 24).map(n => '<a class="n" href="' + esc(n.link) + '" target="_blank" rel="noopener">' + (n.image ? '<img loading="lazy" src="' + esc(n.image) + '" alt="">' : '') + '<div class="m"><b>' + esc(n.title) + '</b><span>' + esc(n.source) + (n.ts ? ' · ' + ago(n.ts) : '') + '</span></div></a>').join('') + '</div>' : '<div class="note">Keine News geladen.</div>') +
+      (bad.length ? '<div class="foot">Nicht erreichbar: ' + esc(bad.join(', ')) + '</div>' : '');
+  }).catch(e => { if (alive(t)) $('#h_news').innerHTML = '<div class="note">News gerade nicht verfügbar.</div>'; });
+}
+
+/* ---- Charts ---- */
+async function vCharts(t) {
+  const v = $('#view');
+  const act = activeProv();
+  const kino = state.chartsProv === 'kino';
+  if (!kino && !act.some(([k]) => k === state.chartsProv)) state.chartsProv = act[0][0];
+  const p = PROVIDERS[state.chartsProv];
+  const chipsHtml = '<div class="chips"><button class="chip ' + (kino ? 'on' : '') + '" data-s="chartsProv" data-v="kino">Kino</button>' + act.map(([k, x]) => '<button class="chip ' + (state.chartsProv === k ? 'on' : '') + '" data-s="chartsProv" data-v="' + k + '">' + x.name + '</button>').join('') + '</div>';
+  if (kino) {
+    v.innerHTML = chipsHtml + '<h2>Jetzt im Kino <small>nach Beliebtheit</small></h2><div id="k1">' + skel() + '</div><h2>Bald im Kino</h2><div id="k2">' + skel() + '</div>' + foot();
+    const today = todayStr();
+    const q = (from, to) => discover('movie', { region: 'DE', 'release_date.gte': from, 'release_date.lte': to, with_release_type: '2|3', sort_by: 'popularity.desc' });
+    [['k1', q(addDays(today, -45), today)], ['k2', q(addDays(today, 1), addDays(today, 45))]].forEach(([el, pr]) => pr.then(list => {
+      if (!alive(t)) return;
+      addHype(list);
+      const l = visible(list).slice(0, 15);
+      $('#' + el).innerHTML = l.length ? row(l.map((i, n) => card(i, { rank: n + 1, hype: true })).join('')) : '<div class="note">Nichts gefunden.</div>';
+    }).catch(e => { if (alive(t)) $('#' + el).innerHTML = errBox(e); }));
+    return;
+  }
+  v.innerHTML = chipsHtml +
+    '<h2>Neu bei ' + p.name + ' <small>aktuelle Starts, neueste zuerst</small></h2><div id="c0">' + skel() + '</div>' +
+    '<h2>Filme bei ' + p.name + '</h2><div id="c1">' + skel() + '</div><h2>Serien bei ' + p.name + '</h2><div id="c2">' + skel() + '</div><h2>Dokus bei ' + p.name + '</h2><div id="c3">' + skel() + '</div><h2>Kinder bei ' + p.name + '</h2><div id="c4">' + skel() + '</div>' + foot();
+  const base = { watch_region: 'DE', with_watch_providers: p.ids, with_watch_monetization_types: 'flatrate', sort_by: 'popularity.desc' };
+  /* Zuletzt hinzugefügt: TMDB kennt kein Datum, ab wann ein Titel im Abo ist. Näherung: jüngste Veröffentlichungen, die beim Anbieter laufen. */
+  const today = todayStr(), from = addDays(today, -120);
+  const safe = pr => pr.catch(() => []);
+  Promise.all([
+    discover('movie', { ...base, sort_by: 'primary_release_date.desc', 'primary_release_date.lte': today, 'primary_release_date.gte': from, 'vote_count.gte': 1 }),
+    safe(discover('movie', { ...base, region: 'DE', with_release_type: '4|6', 'release_date.gte': addDays(today, -60), 'release_date.lte': today, sort_by: 'popularity.desc' })),
+    discover('tv', { ...base, sort_by: 'first_air_date.desc', 'first_air_date.lte': today, 'first_air_date.gte': from, 'vote_count.gte': 0 }),
+    safe(discover('tv', { ...base, 'air_date.gte': addDays(today, -21), 'air_date.lte': addDays(today, 1), sort_by: 'popularity.desc' }))
+  ]).then(([m, md, s, se]) => {
+    if (!alive(t)) return;
+    const seen = new Set();
+    const fresh = visible(m.concat(md, s)).filter(i => !seen.has(i.key) && seen.add(i.key));
+    fresh.forEach(i => { if (i.date && i.date < from) i.date = ''; });
+    const dated = fresh.filter(i => i.date).sort((a, b) => b.date.localeCompare(a.date));
+    const eps = visible(se).filter(i => !seen.has(i.key) && seen.add(i.key)).slice(0, 12);
+    const list = dated.slice(0, 18).concat(eps);
+    $('#c0').innerHTML = list.length ? row(list.map(i => card(i, { sub: eps.includes(i) ? 'Serie · neue Folgen' : (i.type === 'tv' ? 'Serie' : 'Film') + ' · ' + dayLabelShort(i.date) })).join('')) : '<div class="note">Keine aktuellen Starts gefunden.</div>';
+  }).catch(e => { if (alive(t)) $('#c0').innerHTML = errBox(e); });
+  [['movie', 'c1'], ['tv', 'c2']].forEach(([type, el]) => {
+    discover(type, { ...base, without_genres: '99' }).then(list => {
+      if (!alive(t)) return;
+      addHype(list);
+      $('#' + el).innerHTML = list.length ? row(visible(list).slice(0, 15).map((i, n) => card(i, { rank: n + 1, hype: true, sub: i.vote ? 'Bewertung ' + i.vote.toFixed(1).replace('.', ',') : '' })).join('')) : '<div class="note">Keine Daten für diesen Anbieter. Die Anbieter IDs lassen sich oben im Code anpassen.</div>';
+    }).catch(e => { if (alive(t)) $('#' + el).innerHTML = errBox(e); });
+  });
+  /* Dokus: TMDB Genre 99, Filme und Serien gemischt */
+  Promise.all([discover('movie', { ...base, with_genres: '99' }), discover('tv', { ...base, with_genres: '99' })]).then(([m, s]) => {
+    if (!alive(t)) return;
+    const list = addHype(m.concat(s)).sort((a, b) => b.hype - a.hype);
+    $('#c3').innerHTML = list.length ? row(visible(list).slice(0, 15).map((i, n) => card(i, { rank: n + 1, hype: true, sub: (i.type === 'tv' ? 'Serie' : 'Film') + (i.vote ? ' · ' + i.vote.toFixed(1).replace('.', ',') : '') })).join('')) : '<div class="note">Keine Dokus gefunden.</div>';
+  }).catch(e => { if (alive(t)) $('#c3').innerHTML = errBox(e); });
+  /* Kinderbereich: Filme mit FSK 0 oder 6 aus Familie und Animation, Serien aus Kinder und Familie */
+  Promise.all([discover('movie', { ...base, ...EXTRA.kids.movie }), discover('tv', { ...base, ...EXTRA.kids.tv })]).then(([m, s]) => {
+    if (!alive(t)) return;
+    const list = addHype(m.concat(s)).sort((a, b) => b.hype - a.hype);
+    $('#c4').innerHTML = list.length ? row(visible(list).slice(0, 15).map((i, n) => card(i, { rank: n + 1, hype: true, sub: (i.type === 'tv' ? 'Serie' : 'Film') + (i.vote ? ' · ' + i.vote.toFixed(1).replace('.', ',') : '') })).join('')) : '<div class="note">Keine Kinderinhalte gefunden.</div>';
+  }).catch(e => { if (alive(t)) $('#c4').innerHTML = errBox(e); });
+}
+
+/* ---- Releases ---- */
+const POPS = [[0, 'Alle'], [5, '★'], [10, '★★'], [25, '★★★'], [50, '★★★★']];
+async function vReleases(t, opts = {}) {
+  const v = $('#view');
+  const prevCount = state.relCount || 0;
+  const actRel = activeRel();
+  if (!actRel.length) { v.innerHTML = '<div class="note">Alle Bereiche sind ausgeschaltet. Unter Einstellungen (Zahnrad) kannst du sie wieder einschalten.</div>'; return; }
+  if (!actRel.some(([id]) => id === state.relSeg)) state.relSeg = actRel[0][0];
+  if (!opts.more) {
+    state.relTarget = 12;
+    v.innerHTML = seg('relSeg', actRel, state.relSeg) +
+      seg('relPop', POPS.map(([val, l]) => [String(val), l]), String(state.relPop)) + (state.lite ? '' : '<div class="phint">Sterne zeigen die Beliebtheit: ★ ohne Nischentitel, ★★ beliebt, ★★★ sehr beliebt, ★★★★ Hype</div>') + '<div id="r1">' + skel(1) + '</div>' + foot();
+  }
+  const today = todayStr();
+  const PAGE = 20;
+  /* Eine Seite holen. more = es kann noch weitere Titel geben, die den Filter bestehen (TMDB sortiert nach Beliebtheit, danach wird es nur noch kleiner) */
+  const fetchPage = async p => {
+    let qs;
+    if (EXTRA[state.relSeg]) {
+      const ex = EXTRA[state.relSeg];
+      qs = [
+        discover('movie', { region: 'DE', 'release_date.gte': addDays(today, -7), 'release_date.lte': addDays(today, 45), with_release_type: '2|3|4|5', ...ex.movie, sort_by: 'popularity.desc', page: p }),
+        discover('tv', { 'first_air_date.gte': addDays(today, -7), 'first_air_date.lte': addDays(today, 60), ...ex.tv, sort_by: 'popularity.desc', page: p, watch_region: 'DE' })
+      ];
+    } else if (state.relSeg === 'serien') {
+      qs = [discover('tv', { 'first_air_date.gte': addDays(today, -7), 'first_air_date.lte': addDays(today, 60), sort_by: 'popularity.desc', page: p, watch_region: 'DE' })];
+    } else {
+      const type = { kino: '2|3', stream: '4', bluray: '5' }[state.relSeg];
+      const from = state.relSeg === 'kino' ? today : addDays(today, -7);
+      const to = addDays(today, state.relSeg === 'kino' ? 75 : 45);
+      qs = [discover('movie', { region: 'DE', 'release_date.gte': from, 'release_date.lte': to, with_release_type: type, sort_by: 'popularity.desc', page: p })];
+    }
+    const res = await Promise.all(qs);
+    if (!EXTRA[state.relSeg] && state.relSeg !== 'serien') await fixDates(res.flat(), { kino: ['2', '3'], stream: ['4'], bluray: ['5'] }[state.relSeg], state.relSeg === 'kino' ? today : addDays(today, -7), addDays(today, state.relSeg === 'kino' ? 75 : 45));
+    return { items: res.flat(), more: res.some(r => r.length >= PAGE && (state.relPop === 0 || r[r.length - 1].pop >= state.relPop)) };
+  };
+  const build = all => {
+    const s = new Set();
+    const l = all.filter(i => !i.drop && !s.has(i.key) && s.add(i.key)).filter(i => i.pop >= state.relPop);
+    return visible(l).sort((a, b) => (a.date || '9').localeCompare(b.date || '9'));
+  };
+  try {
+    let all = [], list = [], p = 1, more = true;
+    while (more && p <= 15) {
+      const r = await fetchPage(p);
+      if (!alive(t)) return;
+      all = all.concat(r.items); more = r.more; list = build(all);
+      if (list.length >= state.relTarget) break;
+      p++;
+    }
+    const canMore = more && p <= 15;
+    state.relCount = list.length;
+    let html = '';
+    if (state.relSeg === 'bluray' && !state.lite) html += '<div id="bn"></div>';
+    const by = {};
+    list.forEach(i => (by[i.date] = by[i.date] || []).push(i));
+    html += Object.keys(by).sort().map(d => '<div class="day">' + (d ? dayLabel(d) : 'Termin offen') + '</div><div class="grid">' + by[d].map(i => card(i, { hype: false, sub: EXTRA[state.relSeg] ? (i.type === 'tv' ? 'Serie' : 'Film') : (i.pop >= 50 ? 'Hype' : '') })).join('') + '</div>').join('') || '<div class="note">Mit diesem Filter ist nichts übrig. <button class="chip" data-s="relPop" data-v="0" style="margin-left:6px">Alles anzeigen</button></div>';
+    html += canMore ? '<button class="more" data-more="rel">Mehr laden</button>' : (list.length ? '<div class="foot">Das war alles für diesen Filter.</div>' : '');
+    $('#r1').innerHTML = html;
+    if (opts.more) toast(list.length > prevCount ? (list.length - prevCount) + ' weitere Titel geladen' : 'Keine weiteren Titel');
+    if (state.relSeg === 'bluray' && !state.lite) {
+      getJSON('/.netlify/functions/rss').then(r => {
+        const b = (r.items || []).filter(n => n.tag === 'Bluray').slice(0, 6);
+        if (alive(t) && b.length && $('#bn')) $('#bn').innerHTML = foldH2('bluraynews', 'Bluray News') + '<div class="news">' + b.map(n => '<a class="n" href="' + esc(n.link) + '" target="_blank" rel="noopener"><div class="m"><b>' + esc(n.title) + '</b><span>' + esc(n.source) + ' · ' + ago(n.ts) + '</span></div></a>').join('') + '</div><h2>Heimkino Termine <small>TMDB, Disc Veröffentlichungen</small></h2>';
+      }).catch(() => {});
+    }
+  } catch (e) { if (alive(t)) $('#r1').innerHTML = errBox(e); }
+}
+
+/* ---- Gut (beste Bewertung) ---- */
+async function vGut(t, opts = {}) {
+  const v = $('#view');
+  if (state.goodProv !== 'all' && !activeProv().some(([k]) => k === state.goodProv)) state.goodProv = 'all';
+  const prevCount = state.goodCount || 0;
+  if (!opts.more) {
+    state.goodTarget = 12;
+    v.innerHTML = seg('goodSeg', [['movie', 'Filme'], ['tv', 'Serien'], ['doku', 'Dokus'], ['kids', 'Kinder']], state.goodSeg) +
+      '<div class="chips"><button class="chip ' + (state.goodProv === 'all' ? 'on' : '') + '" data-s="goodProv" data-v="all">Alle Anbieter</button>' + activeProv().map(([k, x]) => '<button class="chip ' + (state.goodProv === k ? 'on' : '') + '" data-s="goodProv" data-v="' + k + '">' + x.name + '</button>').join('') + '</div><div id="g1">' + skel(1) + '</div>' + foot();
+  }
+  const base = { sort_by: 'vote_average.desc', 'vote_count.gte': state.goodSeg === 'movie' ? 1500 : 500, watch_region: 'DE' };
+  if (state.goodProv !== 'all') { base.with_watch_providers = PROVIDERS[state.goodProv].ids; base.with_watch_monetization_types = 'flatrate'; }
+  const ex = EXTRA[state.goodSeg];
+  const minVotes = state.goodSeg === 'kids' ? { movie: 300, tv: 80 } : { movie: 200, tv: 60 };
+  const fetchPage = async p => {
+    const qs = ex
+      ? ['movie', 'tv'].map(ty => discover(ty, { ...base, ...ex[ty], 'vote_count.gte': minVotes[ty], page: p }))
+      : [discover(state.goodSeg, { ...base, without_genres: '99', page: p })];
+    const res = await Promise.all(qs);
+    return { items: res.flat(), more: res.some(r => r.length >= 20) };
+  };
+  const build = all => {
+    const s = new Set();
+    let l = all.filter(i => !s.has(i.key) && s.add(i.key));
+    if (ex) l = l.sort((a, b) => b.vote - a.vote);
+    return visible(l);
+  };
+  try {
+    let all = [], list = [], p = 1, more = true;
+    while (more && p <= 15) {
+      const r = await fetchPage(p);
+      if (!alive(t)) return;
+      all = all.concat(r.items); more = r.more; list = build(all);
+      if (list.length >= state.goodTarget) break;
+      p++;
+    }
+    const canMore = more && p <= 15;
+    state.goodCount = list.length;
+    $('#g1').innerHTML = list.length ? '<div class="grid">' + list.map(i => card(i, { sub: (ex ? (i.type === 'tv' ? 'Serie · ' : 'Film · ') : '') + 'Bewertung ' + i.vote.toFixed(1).replace('.', ',') + ' · ' + (i.date || '').slice(0, 4) })).join('') + '</div>' + (canMore ? '<button class="more" data-more="good">Mehr laden</button>' : '<div class="foot">Das war alles.</div>') : '<div class="note">Nichts gefunden.</div>';
+    if (opts.more) toast(list.length > prevCount ? (list.length - prevCount) + ' weitere Titel geladen' : 'Keine weiteren Titel');
+  } catch (e) { if (alive(t)) $('#g1').innerHTML = errBox(e); }
+}
+
+/* ---- Listen ---- */
+function vListen() {
+  const v = $('#view');
+  const kind = state.listSeg;
+  const items = Object.values(lists[kind]).sort((a, b) => (a.title || '').localeCompare(b.title || '', 'de'));
+  v.innerHTML = seg('listSeg', [['watch', 'Merkliste (' + Object.keys(lists.watch).length + ')'], ['seen', 'Gesehen (' + Object.keys(lists.seen).length + ')']], kind) +
+    (items.length ? '<div class="list">' + items.map(i => {
+      ITEMS.set(i.key, i);
+      return '<div class="item"><button class="th" data-open="' + i.key + '">' + poster(i, 'w154') + '</button><div class="m"><b>' + esc(i.title) + '</b><span>' + (i.type === 'tv' ? 'Serie' : 'Film') + (i.date ? ' · ' + i.date.slice(0, 4) : '') + '</span></div>' +
+        '<div class="mini">' + (kind === 'watch' ? '<button data-act="seen" data-k="' + i.key + '">Gesehen</button>' : '<button data-act="watch" data-k="' + i.key + '">Merken</button>') + '<button data-act="' + kind + '" data-k="' + i.key + '" class="on">Entfernen</button></div></div>';
+    }).join('') + '</div>' : '<div class="note">' + (kind === 'watch' ? 'Noch nichts auf der Merkliste. Tippe bei einem Titel auf Merken, dann meldet die App auch neue Folgen.' : 'Noch nichts als gesehen markiert.') + '</div>') +
+    '<div class="foot">' + (fbRef ? 'Listen werden zwischen euren Geräten synchronisiert.' : 'Listen sind auf diesem Gerät gespeichert. Für die Synchronisation Firebase in config.js eintragen.') + '</div>';
+}
+
+/* ---- Sport ---- */
+const TABLE_OK = ['bl1', 'bl2', 'ucl', 'f1'];
+async function loadTable(id) {
+  if (id === 'f1') {
+    const [d, c] = await Promise.allSettled([
+      viaSport('https://api.jolpi.ca/ergast/f1/current/driverStandings.json'),
+      viaSport('https://api.jolpi.ca/ergast/f1/current/constructorStandings.json')
+    ]);
+    const get = (r, k) => r.status === 'fulfilled' && r.value && r.value.MRData && r.value.MRData.StandingsTable && r.value.MRData.StandingsTable.StandingsLists && r.value.MRData.StandingsTable.StandingsLists[0] ? r.value.MRData.StandingsTable.StandingsLists[0][k] || [] : [];
+    return { kind: 'f1', drivers: get(d, 'DriverStandings'), teams: get(c, 'ConstructorStandings') };
+  }
+  const l = LEAGUES.find(x => x.id === id);
+  const rows = await viaSport('https://api.openligadb.de/getbltable/' + l.api + '/' + season());
+  return { kind: 'fb', rows: Array.isArray(rows) ? rows : [] };
+}
+function tableHtml(tb, id) {
+  if (tb.kind === 'f1') {
+    const drv = tb.drivers.map(r => '<tr><td class="pos">' + esc(r.position) + '</td><td class="nm">' + esc((r.Driver.givenName || '') + ' ' + (r.Driver.familyName || '')) + '<div class="sb">' + esc((r.Constructors && r.Constructors[0] && r.Constructors[0].name) || '') + '</div></td><td>' + esc(r.wins) + '</td><td class="pt">' + esc(r.points) + '</td></tr>').join('');
+    const con = tb.teams.map(r => '<tr><td class="pos">' + esc(r.position) + '</td><td class="nm">' + esc(r.Constructor.name) + '</td><td>' + esc(r.wins) + '</td><td class="pt">' + esc(r.points) + '</td></tr>').join('');
+    if (!drv && !con) return '<div class="note">Keine Wertung gefunden.</div>';
+    const head = '<thead><tr><th></th><th></th><th>Siege</th><th>Pkt</th></tr></thead>';
+    return (drv ? '<div class="day">Fahrerwertung</div><table class="tbl">' + head + '<tbody>' + drv + '</tbody></table>' : '') +
+      (con ? '<div class="day">Teamwertung</div><table class="tbl">' + head + '<tbody>' + con + '</tbody></table>' : '');
+  }
+  if (!tb.rows.length) return '<div class="note">Für diesen Wettbewerb gibt es gerade keine Tabelle.</div>';
+  const rows = tb.rows.slice().sort((a, b) => (b.points - a.points) || (b.goalDiff - a.goalDiff) || (b.goals - a.goals));
+  const n = rows.length;
+  const zone = i => id === 'bl1' ? (i < 4 ? 'cl' : i === 4 ? 'el' : i === n - 3 ? 'rel' : i >= n - 2 ? 'down' : '') : id === 'bl2' ? (i < 2 ? 'cl' : (i === 2 || i === n - 3) ? 'rel2' : i >= n - 2 ? 'down' : '') : '';
+  return '<table class="tbl"><thead><tr><th></th><th></th><th>Sp</th><th>Diff</th><th>Pkt</th></tr></thead><tbody>' + rows.map((r, i) => '<tr class="' + zone(i) + '"><td class="pos">' + (i + 1) + '</td><td class="nm"><span class="tw">' +
+    (r.teamIconUrl ? '<img class="lg" loading="lazy" src="' + esc(r.teamIconUrl) + '" alt="" onerror="this.style.visibility=\'hidden\'">' : '<span class="lg"></span>') + '<span>' + esc(r.teamName) + '</span></span></td><td>' + esc(r.matches) + '</td><td>' + (r.goalDiff > 0 ? '+' : '') + esc(r.goalDiff) + '</td><td class="pt">' + esc(r.points) + '</td></tr>').join('') + '</tbody></table>' +
+    (id === 'bl1' ? '<div class="foot">Blau: Champions League, Orange: Europa League und Relegation, Rot: Abstieg</div>' : id === 'bl2' ? '<div class="foot">Blau: Aufstieg, Orange: Relegation, Rot: Abstieg</div>' : '');
+}
+async function vSport(t, opts = {}) {
+  const v = $('#view');
+  if (!state.sportOn.length) { v.innerHTML = '<div class="note">Alle Sportbereiche sind ausgeschaltet. Unter Einstellungen (Zahnrad) kannst du sie wieder einschalten.</div>'; return; }
+  if (state.sportSeg !== 'alle' && !state.sportOn.includes(state.sportSeg)) state.sportSeg = 'alle';
+  const segs = [['alle', 'Alle']].concat(SPORT_DEFS.filter(([id]) => state.sportOn.includes(id)));
+  const tableOk = TABLE_OK.includes(state.sportSeg);
+  const view = tableOk ? state.sportView : 'plan';
+  if (!opts.refresh) v.innerHTML = seg('sportSeg', segs, state.sportSeg) + (tableOk ? seg('sportView', [['plan', 'Spielplan'], ['table', 'Tabelle']], view) : '') + '<div id="s1"><div class="sk" style="height:140px"></div></div>';
+  if (view === 'table') {
+    clearTimeout(state.sportTimer);
+    try {
+      const tb = await loadTable(state.sportSeg);
+      if (alive(t)) $('#s1').innerHTML = tableHtml(tb, state.sportSeg);
+    } catch (e) { if (alive(t)) $('#s1').innerHTML = '<div class="note">Tabelle gerade nicht verfügbar.</div>'; }
+    return;
+  }
+  const ids = state.sportSeg === 'alle' ? state.sportOn.slice() : [state.sportSeg];
+  try {
+    const { events, failedCount } = await loadSport(ids);
+    if (!alive(t)) return;
+    const t0 = todayStr();
+    const limit = Date.now() + (state.sportSeg === 'alle' ? 8 : state.sportSeg === 'nat' ? 180 : 28) * 86400000;
+    const list = events.filter(e => dayKey(e.ts) >= t0 && e.ts <= limit).sort((a, b) => a.ts - b.ts);
+    let html = list.length ? groupedSport(list) : '<div class="note">Keine anstehenden Termine gefunden.</div>';
+    if (failedCount) html += '<div class="foot">' + failedCount + ' Quelle(n) gerade nicht erreichbar.</div>';
+    $('#s1').innerHTML = html;
+    clearTimeout(state.sportTimer);
+    if (list.some(e => e.kind === 'match' && (e.status === 'live' || (e.status === 'upcoming' && dayKey(e.ts) === t0 && e.ts - Date.now() < 3600000)))) {
+      state.sportTimer = setTimeout(() => { if (state.tab === 'sport') renderTab({ refresh: true }); }, 60000);
+    }
+  } catch (e) { if (alive(t)) $('#s1').innerHTML = errBox(e); }
+}
+
+/* ============ Detailansicht ============ */
+async function openSheet(key) {
+  const it = ITEMS.get(key) || lists.seen[key] || lists.watch[key];
+  if (!it) return;
+  const box = $('#sheetBox');
+  $('#sheet').hidden = false;
+  document.body.style.overflow = 'hidden';
+  const paint = d => {
+    const prov = d && d['watch/providers'] && d['watch/providers'].results && d['watch/providers'].results.DE || {};
+    const names = k => (prov[k] || []).map(p => p.provider_name);
+    const flat = names('flatrate'), rent = names('rent'), buy = names('buy');
+    const info = [];
+    if (d && d.vote_average) info.push('Bewertung ' + d.vote_average.toFixed(1).replace('.', ','));
+    if (d && d.runtime) info.push(d.runtime + ' Min');
+    if (d && d.number_of_seasons) info.push(d.number_of_seasons + ' Staffeln');
+    if (d && d.genres && d.genres.length) info.push(d.genres.slice(0, 3).map(g => g.name).join(', '));
+    const chips = (label, arr) => arr.length ? '<div class="muted" style="font-size:12px;margin-top:10px">' + label + '</div><div class="pv">' + arr.map(n => '<span>' + esc(n) + '</span>').join('') + '</div>' : '';
+    const seen = !!lists.seen[key], watch = !!lists.watch[key];
+    box.innerHTML = '<div class="hd">' + (it.poster ? '<img src="' + IMG + 'w185' + it.poster + '" alt="">' : '') + '<div><h3>' + esc(it.title) + '</h3><div class="muted">' + (it.type === 'tv' ? 'Serie' : 'Film') + (it.date ? ' · ' + dayLabelShort(it.date) : '') + '</div><div class="muted" style="margin-top:6px">' + esc(info.join(' · ')) + '</div></div></div>' +
+      '<p>' + esc((d && d.overview) || it.overview || (d ? 'Keine Beschreibung vorhanden.' : 'Lade Details ...')) + '</p>' +
+      chips('Im Abo bei', flat) + chips('Leihen', rent) + chips('Kaufen', buy) +
+      (d && !flat.length && !rent.length && !buy.length ? '<div class="muted">Aktuell kein Streaming Anbieter in Deutschland bekannt.</div>' : '') +
+      '<div class="btns"><button data-act="seen" data-k="' + key + '" class="' + (seen ? 'on' : '') + '">Gesehen</button><button data-act="watch" data-k="' + key + '" class="' + (watch ? 'on' : '') + '">Merken</button><a href="https://www.justwatch.com/de/suche?q=' + encodeURIComponent(it.title) + '" target="_blank" rel="noopener">Bei JustWatch</a></div>' +
+      '<div id="aiBox" style="margin-top:12px">' + (store.get('ai_' + key, null) ? '<div class="ai">' + aiHtml(store.get('ai_' + key, null).text) + '</div>' : (state.lite ? '' : '<button class="chip" data-act="ai_title" data-k="' + key + '">Lohnt sich das?</button>')) + '</div>' +
+      '<button class="more" data-act="close">Schließen</button><small>Streaming Daten: JustWatch via TMDB. Einschätzungen: Perplexity.</small>';
+  };
+  paint(null);
+  try { paint(await tmdb('/' + it.type + '/' + it.id, { language: 'de-DE', append_to_response: 'watch/providers' })); } catch (e) { paint({ overview: it.overview || 'Details konnten nicht geladen werden.' }); }
+}
+function closeSheet() {
+  $('#sheet').hidden = true; document.body.style.overflow = '';
+  if (state.dirty) { state.dirty = false; renderTab(); }
+}
+function openSettings() {
+  $('#sheetBox').innerHTML = '<h3>Einstellungen</h3>' +
+    '<div class="setrow"><div><b>Gesehenes ausblenden</b><span class="muted">Als gesehen markierte Titel verschwinden aus den Listen</span></div><input type="checkbox" class="tg" id="hideSeen"' + (state.hideSeen ? ' checked' : '') + '></div>' +
+    '<div class="setgroup">Startseite</div>' +
+    '<label class="setrow"><span>Heute auf dem Plan</span><input type="checkbox" class="tg" data-flag="showToday"' + (state.showToday ? ' checked' : '') + '></label>' +
+    '<label class="setrow"><span>Das ist diese Woche wichtig</span><input type="checkbox" class="tg" data-flag="showWeek"' + (state.showWeek ? ' checked' : '') + '></label>' +
+    '<div class="setgroup">Releases</div>' +
+    REL_DEFS.map(([k, n]) => '<label class="setrow"><span>' + esc(n) + '</span><input type="checkbox" class="tg" data-rel="' + k + '"' + (state.relOn.includes(k) ? ' checked' : '') + '></label>').join('') +
+    '<div class="setgroup">Sport</div>' +
+    SPORT_DEFS.map(([k, n]) => '<label class="setrow"><span>' + esc(n) + '</span><input type="checkbox" class="tg" data-sport="' + k + '"' + (state.sportOn.includes(k) ? ' checked' : '') + '></label>').join('') +
+    '<div class="setgroup">Meine Streamingdienste</div>' +
+    Object.entries(PROVIDERS).map(([k, x]) => '<label class="setrow"><span>' + esc(x.name) + '</span><input type="checkbox" class="tg" data-prov="' + k + '"' + (state.provOn.includes(k) ? ' checked' : '') + '></label>').join('') +
+    '<div class="setgroup">Daten</div><div class="setrow"><div><b>Merkliste und Gesehen</b><span class="muted">' + (fbRef ? 'Werden zwischen euren Geräten synchronisiert' : 'Nur auf diesem Gerät gespeichert') + '</span></div></div>' +
+    '<div class="btns"><button data-act="reload">Daten neu laden</button><button data-act="close">Fertig</button></div>';
+  $('#sheet').hidden = false;
+  document.body.style.overflow = 'hidden';
+}
+
+let toastTimer;
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 1600); }
+
+/* ============ Suche ============ */
+let searchTimer = 0, searchSeq = 0;
+function openSearch() {
+  $('#sheet').hidden = false;
+  document.body.style.overflow = 'hidden';
+  $('#sheetBox').innerHTML = '<h3>Suche</h3><input id="q" class="qin" type="search" placeholder="Film oder Serie suchen" autocomplete="off" autocapitalize="off" enterkeyhint="search"><div id="qres" class="list" style="margin-top:12px"><div class="muted">Titel eingeben, die Treffer kommen von TMDB. Tippe einen Treffer an, dann siehst du, wo er in Deutschland läuft.</div></div><button class="more" data-act="close">Schließen</button><small>Filmdaten von TMDB. Streaming Verfügbarkeit von JustWatch.</small>';
+  const q = $('#q');
+  q.addEventListener('input', () => { clearTimeout(searchTimer); searchTimer = setTimeout(() => runSearch(q.value.trim()), 350); });
+  setTimeout(() => q.focus(), 50);
+}
+async function runSearch(term) {
+  const box = $('#qres');
+  if (!box) return;
+  if (term.length < 2) { box.innerHTML = '<div class="muted">Mindestens 2 Buchstaben eingeben.</div>'; return; }
+  const my = ++searchSeq;
+  box.innerHTML = '<div class="muted">Suche läuft ...</div>';
+  try {
+    const r = await tmdb('/search/multi', { query: term, language: 'de-DE', include_adult: 'false', region: 'DE' });
+    if (my !== searchSeq || !$('#qres')) return;
+    const items = (r.results || []).filter(x => x.media_type === 'movie' || x.media_type === 'tv').slice(0, 15).map(x => norm(x, x.media_type));
+    if (!items.length) { box.innerHTML = '<div class="muted">Nichts gefunden.</div>'; return; }
+    box.innerHTML = items.map(i => {
+      ITEMS.set(i.key, i);
+      const seen = !!lists.seen[i.key], watch = !!lists.watch[i.key];
+      return '<div class="item"><button class="th" data-open="' + i.key + '">' + poster(i, 'w154') + '</button><div class="m"><b>' + esc(i.title) + '</b><span>' + (i.type === 'tv' ? 'Serie' : 'Film') + (i.date ? ' · ' + i.date.slice(0, 4) : '') + '</span></div>' +
+        '<div class="mini"><button data-act="seen" data-k="' + i.key + '" class="' + (seen ? 'on' : '') + '">Gesehen</button><button data-act="watch" data-k="' + i.key + '" class="' + (watch ? 'on' : '') + '">Merken</button></div></div>';
+    }).join('');
+  } catch (e) { if (my === searchSeq && $('#qres')) $('#qres').innerHTML = '<div class="muted">Suche gerade nicht möglich.</div>'; }
+}
+
+/* ============ Partie Details ============ */
+const fmtDateLong = ts => new Intl.DateTimeFormat('de-DE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: TZ }).format(ts);
+const kv = (k, v) => v ? '<div class="kv"><span>' + esc(k) + '</span><b>' + esc(v) + '</b></div>' : '';
+function finalScore(m) {
+  const rs = m.matchResults || [];
+  const f = rs.find(r => r.resultTypeID === 2) || rs.slice().sort((a, b) => (b.resultOrderID || 0) - (a.resultOrderID || 0))[0];
+  return f ? [f.pointsTeam1, f.pointsTeam2] : null;
+}
+const F1_PATH = { 'Rennen': 'results', 'Qualifying': 'qualifying', 'Sprint': 'sprint' };
+function resultsHtml(e, rows) {
+  if (!rows.length) return '<div class="muted" style="margin-top:12px">Noch keine Ergebnisse vorhanden.</div>';
+  const race = e.session === 'Rennen' || e.session === 'Sprint';
+  return '<div class="msec">Ergebnis</div>' + rows.map(x => {
+    const d = x.Driver || {};
+    const name = ((d.givenName || '').slice(0, 1) + '. ' + (d.familyName || '')).trim();
+    const val = race ? ((x.Time && x.Time.time) || x.status || '') : (x.Q3 || x.Q2 || x.Q1 || '');
+    return '<div class="goal"><span class="gm">' + esc(x.position || '') + '</span><span class="gn">' + esc(name) + '<small>' + esc((x.Constructor && x.Constructor.name) || '') + '</small></span><b>' + esc(val) + '</b></div>';
+  }).join('');
+}
+function matchHtml(e, extra) {
+
+  extra = extra || {};
+  extra = extra || {};
+  if (e.kind !== 'match') {
+    const i = e.info || {};
+    const sess = (i.sessions || []).map(x => '<div class="kv"><span>' + esc(x.label) + '</span><b>' + esc(new Intl.DateTimeFormat('de-DE', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: TZ }).format(x.ts)) + ' Uhr</b></div>').join('');
+    return '<h3>' + esc(e.title) + '</h3><div class="muted">' + esc(i.raceName || e.sub) + '</div>' +
+      '<div class="msec">Strecke</div>' + kv('Rennstrecke', i.circuit) + kv('Ort', [i.locality, i.country].filter(Boolean).join(', ')) + kv('Runde', i.round ? 'Rennen ' + i.round : '') +
+      (extra.results ? resultsHtml(e, extra.results) : '') + (extra.loading ? '<div class="muted" style="margin-top:12px">Ergebnis wird geladen ...</div>' : '') +
+      (sess ? '<div class="msec">Programm am Wochenende</div>' + sess : '') +
+      '<div class="btns"><button data-act="close">Schließen</button></div>';
+  }
+  const i = e.info || {};
+  const center = e.s1 != null ? '<div class="msc">' + esc(e.s1) + ' : ' + esc(e.s2) + '</div>' : '<div class="msc small">' + fmtTime(e.ts) + ' Uhr</div>';
+  const state = e.status === 'live' ? '<span class="live">LIVE</span>' : e.status === 'done' ? '<span class="fin">Beendet</span>' : e.status === 'pending' ? '<span class="fin">Ergebnis folgt</span>' : '<span class="fin">Anstoß</span>';
+  const logo = u => u ? '<img src="' + esc(u) + '" alt="" onerror="this.style.visibility=\'hidden\'">' : '<span class="lgx"></span>';
+  let html = '<div class="mh"><div class="mt">' + logo(e.i1) + '<b>' + esc(e.t1) + '</b></div><div class="mc">' + center + state + '</div><div class="mt">' + logo(e.i2) + '<b>' + esc(e.t2) + '</b></div></div>';
+  html += '<div class="msec">Spiel</div>' + kv('Anstoß', fmtDateLong(e.ts) + ', ' + fmtTime(e.ts) + ' Uhr') + kv('Wettbewerb', e.sub);
+  const place = [i.stadium || i.venue, i.city].filter(Boolean).join(', ');
+  html += kv('Spielort', place) + kv('Land', i.country) + kv('Zuschauer', i.viewers ? new Intl.NumberFormat('de-DE').format(i.viewers) : '');
+  if (i.half && e.s1 != null) html += kv('Halbzeit', i.half.pointsTeam1 + ' : ' + i.half.pointsTeam2);
+  if (e.src === 'oldb' && Array.isArray(i.goals) && i.goals.length) {
+    let p1 = 0, p2 = 0;
+    html += '<div class="msec">Tore</div>' + i.goals.map(g => {
+      const home = g.scoreTeam1 > p1; p1 = g.scoreTeam1; p2 = g.scoreTeam2;
+      const tag = g.isOwnGoal ? ' (Eigentor)' : g.isPenalty ? ' (Elfmeter)' : g.isOvertime ? ' (Verlängerung)' : '';
+      return '<div class="goal"><span class="gm">' + (g.matchMinute != null ? esc(g.matchMinute) + '’' : '') + '</span><span class="gn">' + esc(g.goalGetterName || 'Tor') + esc(tag) + '<small>' + esc(home ? e.t1 : e.t2) + '</small></span><b>' + esc(g.scoreTeam1) + ' : ' + esc(g.scoreTeam2) + '</b></div>';
+    }).join('');
+  }
+  if (extra.table) {
+    const f = n => { const r = extra.table.find(x => x.teamName === n); return r ? 'Platz ' + (extra.table.indexOf(r) + 1) + ', ' + r.points + ' Punkte, ' + (r.goalDiff > 0 ? '+' : '') + r.goalDiff + ' Tore' : ''; };
+    const a = f(e.t1), b = f(e.t2);
+    if (a || b) html += '<div class="msec">Tabelle</div>' + kv(e.t1, a) + kv(e.t2, b);
+  }
+  if (extra.h2h && extra.h2h.length) {
+    let w1 = 0, d = 0, w2 = 0;
+    const rows = extra.h2h.map(m => {
+      const sc = finalScore(m); if (!sc) return '';
+      const home1 = m.team1 && m.team1.teamId === i.team1Id;
+      const g1 = home1 ? sc[0] : sc[1], g2 = home1 ? sc[1] : sc[0];
+      if (g1 > g2) w1++; else if (g1 < g2) w2++; else d++;
+      return '<div class="kv"><span>' + esc(new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: '2-digit', year: '2-digit', timeZone: TZ }).format(Date.parse(m.matchDateTimeUTC || m.matchDateTime))) + '</span><b>' + esc((m.team1 && m.team1.shortName) || (m.team1 && m.team1.teamName) || '') + ' ' + esc(sc[0]) + ' : ' + esc(sc[1]) + ' ' + esc((m.team2 && m.team2.shortName) || (m.team2 && m.team2.teamName) || '') + '</b></div>';
+    }).join('');
+    html += '<div class="msec">Direktvergleich <small>letzte ' + extra.h2h.length + ' Spiele</small></div>' + kv('Bilanz für ' + e.t1, w1 + ' Siege, ' + d + ' Unentschieden, ' + w2 + ' Niederlagen') + rows;
+  }
+  if (extra.loading) html += '<div class="muted" style="margin-top:12px">Weitere Infos werden geladen ...</div>';
+  return html + '<div class="btns"><button data-act="close">Schließen</button></div>';
+}
+async function openMatch(key) {
+  const e = MATCHES.get(key);
+  if (!e) return;
+  const box = $('#sheetBox');
+  $('#sheet').hidden = false;
+  document.body.style.overflow = 'hidden';
+  const oldb = e.kind === 'match' && e.src === 'oldb' && e.info && e.info.team1Id && e.info.team2Id;
+  const f1 = e.src === 'f1' && F1_PATH[e.session] && e.ts < Date.now() && e.info && e.info.round;
+  box.innerHTML = matchHtml(e, { loading: oldb || f1 });
+  if (f1) {
+    let rows = null;
+    try {
+      const r = await viaSport('https://api.jolpi.ca/ergast/f1/' + (e.info.season || 'current') + '/' + e.info.round + '/' + F1_PATH[e.session] + '.json');
+      const race = r.MRData && r.MRData.RaceTable && r.MRData.RaceTable.Races && r.MRData.RaceTable.Races[0];
+      rows = race ? (race.Results || race.QualifyingResults || race.SprintResults || []) : [];
+    } catch (err) { rows = null; }
+    if (!$('#sheet').hidden && MATCHES.get(key) === e) box.innerHTML = matchHtml(e, { results: rows || [] });
+    return;
+  }
+  if (!oldb) return;
+  const l = LEAGUES.find(x => x.id === e.league);
+  const [tb, hh] = await Promise.allSettled([
+    TABLE_OK.includes(e.league) && e.league !== 'ucl' ? loadTable(e.league) : Promise.resolve(null),
+    viaSport('https://api.openligadb.de/getmatchdata/' + e.info.team1Id + '/' + e.info.team2Id)
+  ]);
+  const table = tb.status === 'fulfilled' && tb.value && tb.value.rows ? tb.value.rows.slice().sort((a, b) => (b.points - a.points) || (b.goalDiff - a.goalDiff) || (b.goals - a.goals)) : null;
+  let h2h = [];
+  if (hh.status === 'fulfilled' && Array.isArray(hh.value)) {
+    h2h = hh.value.filter(m => m.matchIsFinished && m.matchID !== e.info.id).sort((a, b) => Date.parse(b.matchDateTimeUTC || b.matchDateTime) - Date.parse(a.matchDateTimeUTC || a.matchDateTime)).slice(0, 5);
+  }
+  if (!$('#sheet').hidden && MATCHES.get(key) === e) box.innerHTML = matchHtml(e, { table, h2h });
+}
+
+/* ============ Perplexity (optional, sparsam: Ergebnisse werden zwischengespeichert) ============ */
+async function askAI(body) {
+  const r = await fetch('/.netlify/functions/perplexity', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+  const d = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(d.error || ('Fehler ' + r.status));
+  return d;
+}
+const aiHtml = s => String(s || '').replace(/\[\d+\]/g, '').trim().split(/\n+/).map(l => l.trim()).filter(Boolean).map(l => {
+  const bullet = /^[•·.*\-–]\s+/.test(l);
+  const t = esc(l.replace(/^[•·.*\-–]\s+/, '')).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\*\*/g, '');
+  return '<p>' + (bullet ? '\u2022 ' : '') + t + '</p>';
+}).join('');
+function weekHtml(loading, err) {
+  const c = store.get('ai_week', null);
+  const fresh = c && c.day === todayStr();
+  let inner;
+  if (loading) inner = '<div class="muted">Wochenüberblick wird erstellt ...</div>';
+  else if (err) inner = '<div class="muted">' + esc(err) + '</div><button class="chip" data-act="ai_week" style="margin-top:8px">Nochmal versuchen</button>';
+  else if (fresh) inner = '<div class="ai">' + aiHtml(c.text) + '</div><button class="chip" data-act="ai_week" style="margin-top:6px">Neu erstellen</button>';
+  else inner = '<button class="chip on" data-act="ai_week">Wochenüberblick erstellen</button>';
+  return '<div class="panel' + (FOLDS.week ? ' shut' : '') + '"><h3 class="fold" data-pfold="week">Das ist diese Woche wichtig</h3>' + inner + '</div>';
+}
+async function runWeek() {
+  const box = $('#h_ai');
+  if (!box) return;
+  box.innerHTML = weekHtml(true);
+  try {
+    const d = await askAI({ mode: 'week' });
+    store.set('ai_week', { day: todayStr(), text: d.text });
+    if ($('#h_ai')) $('#h_ai').innerHTML = weekHtml();
+  } catch (e) { if ($('#h_ai')) $('#h_ai').innerHTML = weekHtml(false, /PERPLEXITY_API_KEY/.test(e.message) ? 'Perplexity Schlüssel fehlt in Netlify.' : e.message); }
+}
+async function runTitle(key) {
+  const it = ITEMS.get(key) || lists.seen[key] || lists.watch[key];
+  const box = $('#aiBox');
+  if (!it || !box) return;
+  box.innerHTML = '<div class="muted">Einschätzung wird geholt ...</div>';
+  try {
+    const d = await askAI({ mode: 'title', title: it.title, type: it.type, year: (it.date || '').slice(0, 4) });
+    store.set('ai_' + key, { text: d.text });
+    if ($('#aiBox')) $('#aiBox').innerHTML = '<div class="ai">' + aiHtml(d.text) + '</div>';
+  } catch (e) { if ($('#aiBox')) $('#aiBox').innerHTML = '<div class="muted">' + esc(/PERPLEXITY_API_KEY/.test(e.message) ? 'Perplexity Schlüssel fehlt in Netlify.' : e.message) + '</div>'; }
+}
+
+/* ============ Ereignisse ============ */
+document.addEventListener('click', e => {
+  const a = e.target.closest('[data-act]');
+  if (a) {
+    const act = a.dataset.act;
+    if (act === 'ai_week') { runWeek(); return; }
+    if (act === 'ai_title') { runTitle(a.dataset.k); return; }
+    if (act === 'seen' || act === 'watch') { toggleList(act, a.dataset.k); return; }
+    if (act === 'close') { closeSheet(); return; }
+    if (act === 'search') { openSearch(); return; }
+    if (act === 'mode') {
+      state.lite = !state.lite; store.set('lite', state.lite); paintMode();
+      if (state.lite && state.tab === 'gut') { go('heute'); } else { renderNav(); renderTab(); }
+      toast(state.lite ? 'Einfach: nur das Wesentliche' : 'Profi: alle Bereiche');
+      return;
+    }
+    if (act === 'settings') { openSettings(); return; }
+    if (act === 'reload') { cache.clear(); state.dirty = false; closeSheet(); renderTab(); return; }
+  }
+  const pf = e.target.closest('[data-pfold]');
+  if (pf) { const pn = pf.closest('.panel'); pn.classList.toggle('shut'); FOLDS[pf.dataset.pfold] = pn.classList.contains('shut'); store.set('folds', FOLDS); return; }
+  const fd = e.target.closest('[data-fold]');
+  if (fd) { fd.classList.toggle('shut'); FOLDS[fd.dataset.fold] = fd.classList.contains('shut'); store.set('folds', FOLDS); return; }
+  const mt = e.target.closest('[data-match]');
+  if (mt) { openMatch(mt.dataset.match); return; }
+  const o = e.target.closest('[data-open]');
+  if (o) { openSheet(o.dataset.open); return; }
+  const tabBtn = e.target.closest('[data-tab]');
+  if (tabBtn) { go(tabBtn.dataset.tab); return; }
+  const s = e.target.closest('[data-s]');
+  if (s) {
+    state[s.dataset.s] = s.dataset.v;
+    if (s.dataset.s === 'relSeg') state.relPage = 1;
+    if (s.dataset.s === 'relPop') { state.relPop = Number(s.dataset.v); store.set('relPop', state.relPop); state.relPage = 1; }
+    if (s.dataset.s === 'goodSeg' || s.dataset.s === 'goodProv') state.goodPage = 1;
+    renderTab();
+    return;
+  }
+  const m = e.target.closest('[data-more]');
+  if (m) { m.disabled = true; m.textContent = 'Lade ...'; if (m.dataset.more === 'rel') state.relTarget = (state.relCount || 0) + 12; else state.goodTarget = (state.goodCount || 0) + 12; renderTab({ more: true }); return; }
+  if (e.target.id === 'sheet') closeSheet();
+});
+document.addEventListener('change', e => {
+  if (e.target.id === 'hideSeen') { state.hideSeen = e.target.checked; store.set('hideSeen', state.hideSeen); state.dirty = true; }
+  if (e.target.dataset && e.target.dataset.flag) { const k = e.target.dataset.flag; state[k] = e.target.checked; store.set(k, state[k]); state.dirty = true; }
+  if (e.target.dataset && (e.target.dataset.rel || e.target.dataset.sport)) {
+    const name = e.target.dataset.rel ? 'relOn' : 'sportOn', k = e.target.dataset.rel || e.target.dataset.sport;
+    let a = state[name].filter(x => x !== k);
+    if (e.target.checked) a.push(k);
+    state[name] = a; store.set(name, a); state.dirty = true;
+  }
+  if (e.target.dataset && e.target.dataset.prov) {
+    const k = e.target.dataset.prov;
+    let on = state.provOn.slice();
+    if (e.target.checked) { if (!on.includes(k)) on.push(k); }
+    else { on = on.filter(x => x !== k); if (!on.length) { e.target.checked = true; toast('Mindestens ein Dienst muss aktiv bleiben'); return; } }
+    state.provOn = on; store.set('provOn', on); state.dirty = true;
+  }
+  if (e.target.dataset && e.target.dataset.slider === 'relPop') {
+    state.relPop = POPS[Number(e.target.value)][0]; store.set('relPop', state.relPop); state.relPage = 1; renderTab();
+  }
+});
+document.addEventListener('input', e => {
+  if (e.target.dataset && e.target.dataset.slider === 'relPop') { const b = e.target.parentElement.querySelector('b'); if (b) b.textContent = POPS[Number(e.target.value)][1]; }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
+
+/* ============ Start ============ */
+function paintMode() { const b = $('#modeBtn'); if (b) { b.textContent = state.lite ? 'Einfach' : 'Profi'; b.classList.toggle('lite', state.lite); } }
+if (state.lite && state.tab === 'gut') state.tab = 'heute';
+paintMode();
+renderNav();
+renderTab();
+initSync();
+</script>
+</body>
+</html>
