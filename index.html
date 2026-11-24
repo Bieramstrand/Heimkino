@@ -598,7 +598,7 @@ function renderNav() {
 function go(tab) { state.tab = tab; store.set('tab', tab); renderNav(); window.scrollTo(0, 0); renderTab(); }
 function renderTab(opts) { const t = ++token; ({ heute: vHeute, charts: vCharts, releases: vReleases, gut: vGut, listen: vListen, sport: vSport })[state.tab](t, opts || {}); }
 const alive = t => t === token;
-const foot = () => '<div class="foot">Filmdaten von TMDB. Streaming Verfügbarkeit von JustWatch.</div>';
+const foot = () => '<div class="foot">Filmdaten von TMDB. Streaming Verfügbarkeit von JustWatch. Version 1.1 über GitHub.</div>';
 
 /* ---- Heute ---- */
 async function vHeute(t) {
