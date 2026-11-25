@@ -590,24 +590,24 @@ const TABS = [
   ['releases', 'Releases', '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'],
   ['gut', 'Top', '<path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/>'],
   ['listen', 'Listen', '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>'],
-  ['sport', 'Sport', '<circle cx="12" cy="12" r="9"/><path d="M12 7l4 3-1.5 5h-5L8 10z"/>']
+  ['news', 'News', '<path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2zM18 9h2v9a2 2 0 0 1-2 2M8 8h7M8 12h7M8 16h4"/>']
 ];
 function renderNav() {
-  $('#nav').innerHTML = TABS.filter(([id]) => !(state.lite && id === 'gut')).map(([id, l, svg]) => '<button data-tab="' + id + '" class="' + (state.tab === id ? 'on' : '') + '"><svg viewBox="0 0 24 24">' + svg + '</svg>' + l + '</button>').join('');
+  $('#nav').innerHTML = TABS.filter(([id]) => !(state.lite && (id === 'gut' || id === 'news'))).map(([id, l, svg]) => '<button data-tab="' + id + '" class="' + (state.tab === id ? 'on' : '') + '"><svg viewBox="0 0 24 24">' + svg + '</svg>' + l + '</button>').join('');
 }
 function go(tab) { state.tab = tab; store.set('tab', tab); renderNav(); window.scrollTo(0, 0); renderTab(); }
-function renderTab(opts) { const t = ++token; ({ heute: vHeute, charts: vCharts, releases: vReleases, gut: vGut, listen: vListen, sport: vSport })[state.tab](t, opts || {}); }
+function renderTab(opts) { const t = ++token; ({ heute: vHeute, charts: vCharts, releases: vReleases, gut: vGut, listen: vListen, news: vNews })[state.tab](t, opts || {}); }
 const alive = t => t === token;
-const foot = () => '<div class="foot">Filmdaten von TMDB. Streaming Verfügbarkeit von JustWatch. Version 1.1 über GitHub.</div>';
+const foot = () => '<div class="foot">Filmdaten von TMDB. Streaming Verfügbarkeit von JustWatch. Version 1.2 über GitHub.</div>';
 
 /* ---- Heute ---- */
 async function vHeute(t) {
   const v = $('#view');
   const d = new Intl.DateTimeFormat('de-DE', { weekday: 'long', day: 'numeric', month: 'long', timeZone: TZ }).format(new Date());
-  v.innerHTML = '<h2>' + d + '</h2><div id="h_today"></div><div id="h_ai">' + (state.showWeek && !state.lite ? weekHtml() : '') + '</div><h2>Gerade gehypt' + (state.lite ? '' : ' <small>Hype Wert aus Beliebtheit und Bewertung</small>') + '</h2><div id="h_hype">' + skel() + '</div><h2>Neue Folgen</h2><div id="h_eps">' + skel(1) + '</div>' + (state.lite ? '' : foldH2('news', 'News') + '<div id="h_news"><div class="sk" style="height:90px"></div></div>') + foot();
+  v.innerHTML = '<h2>' + d + '</h2><div id="h_today"></div><h2>Gerade gehypt' + (state.lite ? '' : ' <small>Hype Wert aus Beliebtheit und Bewertung</small>') + '</h2><div id="h_hype">' + skel() + '</div><h2>Neue Folgen</h2><div id="h_eps">' + skel(1) + '</div>' + foot();
   const today = todayStr();
   const eps = episodeItems().catch(() => []);
-  const sportP = state.showToday && state.sportOn.length ? loadSport(state.sportOn.slice()).catch(() => ({ events: [] })) : Promise.resolve({ events: [] });
+  const sportP = Promise.resolve({ events: [] });
   const relP = state.showToday ? discover('movie', { region: 'DE', 'release_date.gte': today, 'release_date.lte': today, with_release_type: '2|3|4|5', sort_by: 'popularity.desc' }).catch(() => []) : Promise.resolve([]);
 
   tmdb('/trending/all/week', { language: 'de-DE' }).then(r => {
@@ -633,7 +633,13 @@ async function vHeute(t) {
     $('#h_eps').innerHTML = upcoming.length ? '<div class="list">' + upcoming.map(epRow).join('') + '</div>' : '<div class="note">Gerade keine neuen Folgen bei Merklisten Serien oder gehypten Serien.</div>';
   });
 
-  if (!state.lite) getJSON('/.netlify/functions/rss').then(r => {
+}
+
+/* ---- News ---- */
+async function vNews(t) {
+  const v = $('#view');
+  v.innerHTML = '<div id="h_ai">' + (state.showWeek ? weekHtml() : '') + '</div>' + foldH2('news', 'News') + '<div id="h_news"><div class="sk" style="height:90px"></div></div>' + foot();
+  getJSON('/.netlify/functions/rss').then(r => {
     if (!alive(t)) return;
     const items = r.items || [];
     const bad = (r.status || []).filter(s => !s.ok).map(s => s.id);
@@ -934,11 +940,10 @@ function openSettings() {
     '<div class="setrow"><div><b>Gesehenes ausblenden</b><span class="muted">Als gesehen markierte Titel verschwinden aus den Listen</span></div><input type="checkbox" class="tg" id="hideSeen"' + (state.hideSeen ? ' checked' : '') + '></div>' +
     '<div class="setgroup">Startseite</div>' +
     '<label class="setrow"><span>Heute auf dem Plan</span><input type="checkbox" class="tg" data-flag="showToday"' + (state.showToday ? ' checked' : '') + '></label>' +
+    '<div class="setgroup">News</div>' +
     '<label class="setrow"><span>Das ist diese Woche wichtig</span><input type="checkbox" class="tg" data-flag="showWeek"' + (state.showWeek ? ' checked' : '') + '></label>' +
     '<div class="setgroup">Releases</div>' +
     REL_DEFS.map(([k, n]) => '<label class="setrow"><span>' + esc(n) + '</span><input type="checkbox" class="tg" data-rel="' + k + '"' + (state.relOn.includes(k) ? ' checked' : '') + '></label>').join('') +
-    '<div class="setgroup">Sport</div>' +
-    SPORT_DEFS.map(([k, n]) => '<label class="setrow"><span>' + esc(n) + '</span><input type="checkbox" class="tg" data-sport="' + k + '"' + (state.sportOn.includes(k) ? ' checked' : '') + '></label>').join('') +
     '<div class="setgroup">Meine Streamingdienste</div>' +
     Object.entries(PROVIDERS).map(([k, x]) => '<label class="setrow"><span>' + esc(x.name) + '</span><input type="checkbox" class="tg" data-prov="' + k + '"' + (state.provOn.includes(k) ? ' checked' : '') + '></label>').join('') +
     '<div class="setgroup">Daten</div><div class="setrow"><div><b>Merkliste und Gesehen</b><span class="muted">' + (fbRef ? 'Werden zwischen euren Geräten synchronisiert' : 'Nur auf diesem Gerät gespeichert') + '</span></div></div>' +
@@ -1137,7 +1142,7 @@ document.addEventListener('click', e => {
     if (act === 'search') { openSearch(); return; }
     if (act === 'mode') {
       state.lite = !state.lite; store.set('lite', state.lite); paintMode();
-      if (state.lite && state.tab === 'gut') { go('heute'); } else { renderNav(); renderTab(); }
+      if (state.lite && (state.tab === 'gut' || state.tab === 'news')) { go('heute'); } else { renderNav(); renderTab(); }
       toast(state.lite ? 'Einfach: nur das Wesentliche' : 'Profi: alle Bereiche');
       return;
     }
@@ -1194,7 +1199,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet()
 
 /* ============ Start ============ */
 function paintMode() { const b = $('#modeBtn'); if (b) { b.textContent = state.lite ? 'Einfach' : 'Profi'; b.classList.toggle('lite', state.lite); } }
-if (state.lite && state.tab === 'gut') state.tab = 'heute';
+if (state.tab === 'sport' || (state.lite && (state.tab === 'gut' || state.tab === 'news'))) state.tab = 'heute';
 paintMode();
 renderNav();
 renderTab();
