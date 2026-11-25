@@ -585,12 +585,12 @@ const activeProv = () => { const l = Object.entries(PROVIDERS).filter(([k]) => s
 const activeRel = () => REL_DEFS.filter(([id]) => state.relOn.includes(id));
 let token = 0;
 const TABS = [
+  ['news', 'News', '<path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2zM18 9h2v9a2 2 0 0 1-2 2M8 8h7M8 12h7M8 16h4"/>'],
   ['heute', 'Heute', '<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>'],
   ['charts', 'Charts', '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'],
   ['releases', 'Releases', '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'],
   ['gut', 'Top', '<path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/>'],
-  ['listen', 'Listen', '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>'],
-  ['news', 'News', '<path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2zM18 9h2v9a2 2 0 0 1-2 2M8 8h7M8 12h7M8 16h4"/>']
+  ['listen', 'Listen', '<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>']
 ];
 function renderNav() {
   $('#nav').innerHTML = TABS.filter(([id]) => !(state.lite && (id === 'gut' || id === 'news'))).map(([id, l, svg]) => '<button data-tab="' + id + '" class="' + (state.tab === id ? 'on' : '') + '"><svg viewBox="0 0 24 24">' + svg + '</svg>' + l + '</button>').join('');
@@ -598,7 +598,7 @@ function renderNav() {
 function go(tab) { state.tab = tab; store.set('tab', tab); renderNav(); window.scrollTo(0, 0); renderTab(); }
 function renderTab(opts) { const t = ++token; ({ heute: vHeute, charts: vCharts, releases: vReleases, gut: vGut, listen: vListen, news: vNews })[state.tab](t, opts || {}); }
 const alive = t => t === token;
-const foot = () => '<div class="foot">Filmdaten von TMDB. Streaming Verfügbarkeit von JustWatch. Version 1.2 über GitHub.</div>';
+const foot = () => '<div class="foot">Filmdaten von TMDB. Streaming Verfügbarkeit von JustWatch. Version 1.3 über GitHub.</div>';
 
 /* ---- Heute ---- */
 async function vHeute(t) {
