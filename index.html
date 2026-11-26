@@ -600,7 +600,7 @@ function renderNav() {
 function go(tab) { state.tab = tab; store.set('tab', tab); renderNav(); window.scrollTo(0, 0); renderTab(); }
 function renderTab(opts) { const t = ++token; ({ heute: vHeute, charts: vCharts, releases: vReleases, gut: vGut, listen: vListen, news: vNews })[state.tab](t, opts || {}); }
 const alive = t => t === token;
-const foot = () => '<div class="foot">Filmdaten von TMDB. Streaming Verfügbarkeit von JustWatch. Version 1.5 über GitHub.</div>';
+const foot = () => '<div class="foot">Filmdaten von TMDB. Streaming Verfügbarkeit von JustWatch. Version 1.6 über GitHub.</div>';
 
 /* ---- Heute ---- */
 async function vHeute(t) {
@@ -639,7 +639,7 @@ async function vHeute(t) {
     };
     rl.forEach(i => { ITEMS.set(i.key, i); lines.push('<div class="ev"><div class="t">Start</div><div class="m"><b>' + esc(i.title) + '</b><span>' + esc(relLabel(i)) + '</span></div></div>'); });
     const MAXL = 8;
-    $('#h_today').innerHTML = state.showToday && lines.length ? '<div class="panel' + (FOLDS.plan ? ' shut' : '') + '"><h3 class="fold" data-pfold="plan">Heute auf dem Plan</h3>' + lines.slice(0, MAXL).join('') + (lines.length > MAXL ? '<div class="ev"><div class="m"><span>und ' + (lines.length - MAXL) + ' weitere Einträge, mehr unter Sport und Releases</span></div></div>' : '') + '</div>' : '';
+    $('#h_today').innerHTML = state.showToday && !state.lite && lines.length ? '<div class="panel' + (FOLDS.plan ? ' shut' : '') + '"><h3 class="fold" data-pfold="plan">Heute auf dem Plan</h3>' + lines.slice(0, MAXL).join('') + (lines.length > MAXL ? '<div class="ev"><div class="m"><span>und ' + (lines.length - MAXL) + ' weitere Einträge, mehr unter Sport und Releases</span></div></div>' : '') + '</div>' : '';
     const upcoming = ev.slice().sort((a, b) => a.state === b.state ? a.when.localeCompare(b.when) : (a.state === 'neu' ? -1 : 1));
     $('#h_eps').innerHTML = upcoming.length ? '<div class="list">' + upcoming.map(epRow).join('') + '</div>' : '<div class="note">Gerade keine neuen Folgen bei Merklisten Serien oder gehypten Serien.</div>';
   });
