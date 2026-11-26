@@ -600,7 +600,7 @@ function renderNav() {
 function go(tab) { state.tab = tab; store.set('tab', tab); renderNav(); window.scrollTo(0, 0); renderTab(); }
 function renderTab(opts) { const t = ++token; ({ heute: vHeute, charts: vCharts, releases: vReleases, gut: vGut, listen: vListen, news: vNews })[state.tab](t, opts || {}); }
 const alive = t => t === token;
-const foot = () => '<div class="foot">Filmdaten von TMDB. Streaming Verfügbarkeit von JustWatch. Version 1.4 über GitHub.</div>';
+const foot = () => '<div class="foot">Filmdaten von TMDB. Streaming Verfügbarkeit von JustWatch. Version 1.5 über GitHub.</div>';
 
 /* ---- Heute ---- */
 async function vHeute(t) {
@@ -623,12 +623,21 @@ async function vHeute(t) {
     }));
   }).catch(e => { if (alive(t)) $('#h_hype').innerHTML = errBox(e); });
 
-  Promise.all([eps, sportP, relP]).then(([ev, sp, rel]) => {
+  Promise.all([eps, sportP, relP]).then(async ([ev, sp, rel]) => {
     if (!alive(t)) return;
     const lines = [];
     (sp.events || []).filter(e => dayKey(e.ts) === today).sort((a, b) => a.ts - b.ts).forEach(e => lines.push(evRow(e)));
     ev.filter(e => e.when === today).forEach(e => lines.push('<div class="ev"><div class="t">Neu</div><div class="m"><b>' + esc(e.show.title) + '</b><span>' + esc(epLabel(e)) + '</span></div></div>'));
-    rel.filter(i => i.pop >= 8).slice(0, 4).forEach(i => { ITEMS.set(i.key, i); lines.push('<div class="ev"><div class="t">Start</div><div class="m"><b>' + esc(i.title) + '</b><span>Film Release heute</span></div></div>'); });
+    const rl = rel.filter(i => i.pop >= 8).slice(0, 4);
+    await Promise.all(rl.map(i => deDates(i.id).catch(() => null)));
+    if (!alive(t)) return;
+    const RT = { '2': 'Im Kino', '3': 'Im Kino', '4': 'Digital zum Leihen oder Kaufen', '5': 'Auf Blu-ray und DVD', '6': 'Im Fernsehen' };
+    const relLabel = i => {
+      const d = DE_DATES.get(i.id) || [];
+      const names = [...new Set(d.filter(x => x.date === today).map(x => RT[String(x.type)]).filter(Boolean))];
+      return 'Film · ' + (names.length ? names.join(' und ') : 'Start heute');
+    };
+    rl.forEach(i => { ITEMS.set(i.key, i); lines.push('<div class="ev"><div class="t">Start</div><div class="m"><b>' + esc(i.title) + '</b><span>' + esc(relLabel(i)) + '</span></div></div>'); });
     const MAXL = 8;
     $('#h_today').innerHTML = state.showToday && lines.length ? '<div class="panel' + (FOLDS.plan ? ' shut' : '') + '"><h3 class="fold" data-pfold="plan">Heute auf dem Plan</h3>' + lines.slice(0, MAXL).join('') + (lines.length > MAXL ? '<div class="ev"><div class="m"><span>und ' + (lines.length - MAXL) + ' weitere Einträge, mehr unter Sport und Releases</span></div></div>' : '') + '</div>' : '';
     const upcoming = ev.slice().sort((a, b) => a.state === b.state ? a.when.localeCompare(b.when) : (a.state === 'neu' ? -1 : 1));
