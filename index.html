@@ -600,7 +600,7 @@ function renderNav() {
 function go(tab) { state.tab = tab; store.set('tab', tab); renderNav(); window.scrollTo(0, 0); renderTab(); }
 function renderTab(opts) { const t = ++token; ({ heute: vHeute, charts: vCharts, releases: vReleases, gut: vGut, listen: vListen, news: vNews })[state.tab](t, opts || {}); }
 const alive = t => t === token;
-const foot = () => '<div class="foot">Filmdaten von TMDB. Streaming Verfügbarkeit von JustWatch. Version 1.6 über GitHub.</div>';
+const foot = () => '<div class="foot">Filmdaten von TMDB. Streaming Verfügbarkeit von JustWatch. Version 1.7 über GitHub.</div>';
 
 /* ---- Heute ---- */
 async function vHeute(t) {
@@ -724,6 +724,7 @@ async function vCharts(t) {
 
 /* ---- Releases ---- */
 const POPS = [[0, 'Alle'], [5, '★'], [10, '★★'], [25, '★★★'], [50, '★★★★']];
+const relPopEff = () => state.lite ? 0 : state.relPop;
 async function vReleases(t, opts = {}) {
   const v = $('#view');
   const prevCount = state.relCount || 0;
@@ -733,7 +734,7 @@ async function vReleases(t, opts = {}) {
   if (!opts.more) {
     state.relTarget = 12;
     v.innerHTML = seg('relSeg', actRel, state.relSeg) +
-      seg('relPop', POPS.map(([val, l]) => [String(val), l]), String(state.relPop)) + (state.lite ? '' : '<div class="phint">Sterne zeigen die Beliebtheit: ★ ohne Nischentitel, ★★ beliebt, ★★★ sehr beliebt, ★★★★ Hype</div>') + '<div id="r1">' + skel(1) + '</div>' + foot();
+      (state.lite ? '' : seg('relPop', POPS.map(([val, l]) => [String(val), l]), String(state.relPop))) + (state.lite ? '' : '<div class="phint">Sterne zeigen die Beliebtheit: ★ ohne Nischentitel, ★★ beliebt, ★★★ sehr beliebt, ★★★★ Hype</div>') + '<div id="r1">' + skel(1) + '</div>' + foot();
   }
   const today = todayStr();
   const PAGE = 20;
@@ -756,11 +757,11 @@ async function vReleases(t, opts = {}) {
     }
     const res = await Promise.all(qs);
     if (!EXTRA[state.relSeg] && state.relSeg !== 'serien') await fixDates(res.flat(), { kino: ['2', '3'], stream: ['4'], bluray: ['5'] }[state.relSeg], state.relSeg === 'kino' ? today : addDays(today, -7), addDays(today, state.relSeg === 'kino' ? 75 : 45));
-    return { items: res.flat(), more: res.some(r => r.length >= PAGE && (state.relPop === 0 || r[r.length - 1].pop >= state.relPop)) };
+    return { items: res.flat(), more: res.some(r => r.length >= PAGE && (relPopEff() === 0 || r[r.length - 1].pop >= relPopEff())) };
   };
   const build = all => {
     const s = new Set();
-    const l = all.filter(i => !i.drop && !s.has(i.key) && s.add(i.key)).filter(i => i.pop >= state.relPop);
+    const l = all.filter(i => !i.drop && !s.has(i.key) && s.add(i.key)).filter(i => i.pop >= relPopEff());
     return visible(l).sort((a, b) => (a.date || '9').localeCompare(b.date || '9'));
   };
   try {
